@@ -1,0 +1,6 @@
+{
+	"id": "scenetutorial",
+	"title": "TITLE_SCENE_TUTORIAL",
+	"help": "HELP_SCENE_TUTORIAL",
+	"next_scene": "res://scene/scene_tutorial.tscn"
+}

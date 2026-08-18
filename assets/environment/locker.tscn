@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://chnntf2w6srtg"]
+
+[ext_resource type="Script" uid="uid://cjwpda18g61lp" path="res://assets/environment/locker.gd" id="1_locker"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_locker"]
+albedo_color = Color(0.2509804, 0.2784314, 0.23137255, 1)
+metallic = 0.25
+roughness = 0.68
+
+[sub_resource type="BoxMesh" id="Mesh_locker"]
+material = SubResource("Mat_locker")
+size = Vector3(1.05, 2.25, 0.72)
+
+[sub_resource type="BoxMesh" id="Mesh_handle"]
+size = Vector3(0.08, 0.3, 0.08)
+
+[sub_resource type="BoxShape3D" id="Shape_locker"]
+size = Vector3(1.05, 2.25, 0.72)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7pypf"]
+size = Vector3(1.4353027, 1, 1.1092529)
+
+[sub_resource type="QuadMesh" id="QuadMesh_tsy18"]
+size = Vector2(0.705, 2)
+
+[sub_resource type="Gradient" id="Gradient_wxj1a"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.7051282, 0.7307692, 0.76495725, 0.8162393, 0.84615386, 0.8888889, 0.9188034, 0.9444444)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lhedq"]
+gradient = SubResource("Gradient_wxj1a")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddn70"]
+transparency = 1
+albedo_color = Color(0.2509804, 0.2784314, 0.23137255, 1)
+albedo_texture = SubResource("GradientTexture2D_lhedq")
+albedo_texture_msdf = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_ddn70"]
+size = Vector2(0.17, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7aktr"]
+albedo_color = Color(0.2509804, 0.2784314, 0.23137255, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_wxj1a"]
+size = Vector2(0.7, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ik5r1"]
+albedo_color = Color(0.2509804, 0.2784314, 0.23137255, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_7aktr"]
+size = Vector2(1.035, 0.71)
+
+[node name="Locker" type="StaticBody3D" unique_id=1912394647]
+script = ExtResource("1_locker")
+
+[node name="Marker3D" type="Marker3D" parent="." unique_id=448450359]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9267447, -0.0013133585)
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=1722536372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.125, 0)
+mesh = SubResource("Mesh_locker")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=1450018654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.18, -0.4)
+material_override = SubResource("Mat_locker")
+mesh = SubResource("Mesh_handle")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1387011099]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.125, 0)
+shape = SubResource("Shape_locker")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1790895395]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=652741645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.028686523, 0.5013491, -0.854187)
+shape = SubResource("BoxShape3D_7pypf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=157244352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2464412, -0.36384082)
+mesh = SubResource("QuadMesh_tsy18")
+surface_material_override/0 = SubResource("StandardMaterial3D_ddn70")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D" unique_id=740493498]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, -0.0051214695, 0)
+mesh = SubResource("QuadMesh_ddn70")
+surface_material_override/0 = SubResource("StandardMaterial3D_7aktr")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1811931732]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.50693774, -0.015045881, 0.35476592)
+mesh = SubResource("QuadMesh_wxj1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_ik5r1")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1948378420]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.507, -0.015045881, 0.35453412)
+mesh = SubResource("QuadMesh_wxj1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_ik5r1")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MeshInstance3D" unique_id=394841948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43, -0.0051214695, 0)
+mesh = SubResource("QuadMesh_ddn70")
+surface_material_override/0 = SubResource("StandardMaterial3D_7aktr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D" unique_id=2113111079]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.9840089, 0.3640747)
+mesh = SubResource("QuadMesh_7aktr")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

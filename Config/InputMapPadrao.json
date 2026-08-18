@@ -1,0 +1,85 @@
+{
+	"version": 2,
+	"PC": {
+		"MoveUp": "W",
+		"MoveDown": "S",
+		"MoveLeft": "A",
+		"MoveRight": "D",
+		"Space": "Space",
+		"Interact": "E",
+		"Pause": "Escape",
+		"Inventory": "Tab",
+		"RB": "Equal",
+		"LB": "Minus",
+		"ModeMove": "Ctrl",
+		"Run": "Shift",
+		"Action2": "Q"
+	},
+	"JOYPAD": {
+		"MoveUp": {
+			"type": "joypad_motion",
+			"axis": 1,
+			"axis_value": -1.0
+		},
+		"MoveDown": {
+			"type": "joypad_motion",
+			"axis": 1,
+			"axis_value": 1.0
+		},
+		"MoveLeft": {
+			"type": "joypad_motion",
+			"axis": 0,
+			"axis_value": -1.0
+		},
+		"MoveRight": {
+			"type": "joypad_motion",
+			"axis": 0,
+			"axis_value": 1.0
+		},
+		"Space": {
+			"type": "joypad_button",
+			"button_index": 2
+		},
+		"Interact": {
+			"type": "joypad_button",
+			"button_index": 3
+		},
+		"Pause": {
+			"type": "joypad_button",
+			"button_index": 6
+		},
+		"Inventory": {
+			"type": "joypad_button",
+			"button_index": 4
+		},
+		"RB": {
+			"type": "joypad_button",
+			"button_index": 10
+		},
+		"LB": {
+			"type": "joypad_button",
+			"button_index": 9
+		},
+		"UpAction": {
+			"type": "joypad_button",
+			"button_index": 11
+		},
+		"DownAction": {
+			"type": "joypad_button",
+			"button_index": 12
+		},
+		"ModeMove": {
+			"type": "joypad_button",
+			"button_index": 0
+		},
+		"Run": {
+			"type": "joypad_motion",
+			"axis": 5,
+			"axis_value": 1.0
+		},
+		"Action2": {
+			"type": "joypad_button",
+			"button_index": 1
+		}
+	}
+}

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://derg5aayocjki"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_admcv"]
+content_margin_left = 15.0
+content_margin_top = 5.0
+content_margin_right = 15.0
+content_margin_bottom = 5.0
+
+[node name="ShaderCorpoEdicao" type="ScrollContainer" unique_id=1177567754]
+custom_minimum_size = Vector2(0, 650)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_admcv")
+metadata/_tab_index = 0
+
+[node name="SuporteParameter" type="VBoxContainer" parent="." unique_id=1254853593]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0

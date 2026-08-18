@@ -1,0 +1,389 @@
+[gd_scene format=3 uid="uid://bt3b1g3xwf2my"]
+
+[ext_resource type="PackedScene" uid="uid://bs4h1ft68fxl3" path="res://UI_ASSETS/cenas/menu_inicial.tscn" id="1_em00p"]
+[ext_resource type="Script" uid="uid://doc2m3y3o5xfd" path="res://UI_ASSETS/script/container_shader.gd" id="3_1rm87"]
+[ext_resource type="PackedScene" uid="uid://dcucxv00b16rq" path="res://assets/player/meshs/body_player.scn" id="3_h4f5v"]
+[ext_resource type="Script" uid="uid://dv3h8aqote0tl" path="res://UI_ASSETS/script/panel_edicao.gd" id="4_a76cq"]
+[ext_resource type="PackedScene" uid="uid://d0jlyav3pn1ty" path="res://UI_ASSETS/cenas/base_scroll.tscn" id="5_admcv"]
+[ext_resource type="PackedScene" uid="uid://qqs57asvs7g1" path="res://UI_ASSETS/cenas/base_option.tscn" id="6_h4f5v"]
+[ext_resource type="PackedScene" uid="uid://c8vmfubnc8281" path="res://UI_ASSETS/cenas/base_color.tscn" id="7_3icin"]
+
+[sub_resource type="GDScript" id="GDScript_jhet3"]
+resource_name = "CreateCharacter"
+script/source = "extends Control
+
+@export var scene_path:PackedScene
+@onready var panel_edicao: PanelContainer = %PanelEdicao
+
+func _ready() -> void:
+	panel_edicao.hide()
+
+func _on_return_pressed() -> void:
+	get_tree().change_scene_to_packed(scene_path)
+
+
+func _on_check_button_toggled(toggled_on: bool) -> void:
+	panel_edicao.visible = toggled_on
+"
+
+[sub_resource type="Gradient" id="Gradient_h4f5v"]
+offsets = PackedFloat32Array(0.05, 0.25, 0.75, 0.95)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.98039216, 0, 0, 0, 0.98039216, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_56boy"]
+gradient = SubResource("Gradient_h4f5v")
+fill_from = Vector2(1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_75a12"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+texture = SubResource("GradientTexture2D_56boy")
+
+[sub_resource type="GDScript" id="GDScript_tg4hv"]
+resource_name = "ControleCamera"
+script/source = "extends SubViewportContainer
+
+@onready var camera_3d: Camera3D = $SubViewport/Camera3D
+@onready var player: Node3D = $SubViewport/MarkPlayer
+
+@export_group(\"UI References\")
+@export var scroll_horizontal: HSlider
+@export var scroll_vertical: VSlider
+
+@export_group(\"Camera Settings\")
+@export var pan_speed: float = 0.005
+@export var zoom_step: float = 0.2
+@export var min_pan_y: float = 0.0
+@export var max_pan_y: float = 1.5
+
+@export_group(\"Player Settings\")
+@export var player_rotation_speed: float = 0.005
+# Nova variável de velocidade. Medida em radianos por segundo (ajuste a gosto).
+@export var max_ui_rotation_speed: float = 3.0 
+
+var _ui_rotation_tween: Tween
+
+func _ready() -> void:
+	# Configura a barra horizontal para atuar como \"joystick / acelerador\"
+	if is_instance_valid(scroll_horizontal):
+		scroll_horizontal.min_value = 0.0
+		scroll_horizontal.max_value = 100.0
+		
+		# Aumenta a precisão do slider para garantir um movimento liso no 3D
+		scroll_horizontal.step = 0.01 
+		scroll_horizontal.value = 50.0
+		
+		# Conectando os sinais de clicar e soltar a barra
+		scroll_horizontal.drag_started.connect(_on_horizontal_drag_started)
+		scroll_horizontal.drag_ended.connect(_on_horizontal_drag_ended)
+		
+	# Configura o slider vertical (0 a 100) e sincroniza com o Y inicial
+	if is_instance_valid(scroll_vertical):
+		scroll_vertical.min_value = 0.0
+		scroll_vertical.max_value = 100.0
+		scroll_vertical.step = 0.01
+		
+		var percent := inverse_lerp(min_pan_y, max_pan_y, camera_3d.global_position.y)
+		scroll_vertical.set_value_no_signal(percent * 100.0)
+
+
+# A rotação contínua baseada no acelerador DEVE acontecer no _process
+func _process(delta: float) -> void:
+	if is_instance_valid(scroll_horizontal) and scroll_horizontal.value != 50.0:
+		if is_instance_valid(player):
+			# Normaliza a barra de 0 a 100 para um eixo de -1.0 a 1.0 (onde 50 é o zero)
+			var eixo_rotacao := (scroll_horizontal.value - 50.0) / 50.0
+			
+			# Multiplica o eixo pela velocidade máxima e o delta. 
+			# O sinal negativo garante que direita é horário.
+			player.rotate_y(eixo_rotacao * max_ui_rotation_speed * delta)
+
+
+func _input(event: InputEvent) -> void:
+	# --- 1. SISTEMA DE ZOOM ---
+	if event is InputEventMouseButton:
+		if event.pressed:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				camera_3d.size = clampf(camera_3d.size - zoom_step, 0.3, 3.0)
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				camera_3d.size = clampf(camera_3d.size + zoom_step, 0.3, 3.0)
+			elif event.button_index == MOUSE_BUTTON_MIDDLE:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		
+		# Soltou a rodinha -> Devolve o mouse pro sistema
+		elif not event.pressed and event.button_index == MOUSE_BUTTON_MIDDLE:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	# --- 2. SISTEMA DE PAN & ROTAÇÃO LIVRE COM O MOUSE ---
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		# Eixo Y do Mouse -> Move a Câmera
+		var dynamic_sensitivity: float = pan_speed * camera_3d.size
+		var pan_motion: Vector3 = camera_3d.transform.basis.y * event.relative.y
+		
+		var target_pos: Vector3 = camera_3d.global_position - (pan_motion * dynamic_sensitivity)
+		target_pos.y = clampf(target_pos.y, min_pan_y, max_pan_y)
+		camera_3d.global_position = target_pos
+		
+		# Sincroniza a barra vertical com o movimento do mouse
+		if is_instance_valid(scroll_vertical):
+			var percent := inverse_lerp(min_pan_y, max_pan_y, camera_3d.global_position.y)
+			scroll_vertical.set_value_no_signal(percent * 100.0)
+		
+		# Eixo X do Mouse -> Rotaciona o Player
+		if is_instance_valid(player):
+			player.rotate_y(-event.relative.x * player_rotation_speed)
+
+
+func _on_pan_vertical_value_changed(value: float) -> void:
+	# O Pan vertical ainda usa value_changed, porque ele espelha posições físicas exatas
+	var percent := value / 100.0
+	var target_y: float = lerp(min_pan_y, max_pan_y, percent)
+	camera_3d.global_position.y = clampf(target_y, min_pan_y, max_pan_y)
+
+
+# -- NOVAS FUNÇÕES PARA O COMPORTAMENTO DE \"ACELERADOR/ELÁSTICO\" DA BARRA HORIZONTAL --
+
+func _on_horizontal_drag_started() -> void:
+	# Se o jogador agarrar a barra enquanto o elástico está puxando ela de volta, nós cancelamos o elástico
+	if _ui_rotation_tween and _ui_rotation_tween.is_valid():
+		_ui_rotation_tween.kill()
+
+func _on_horizontal_drag_ended(_value_changed: bool) -> void:
+	# Quando o jogador solta a barra, criamos o Tween para puxar de volta pro 50.0
+	if is_instance_valid(scroll_horizontal):
+		_ui_rotation_tween = create_tween()
+		
+		# Ajuste o 0.2 para definir quão rápido a mola puxa a barra de volta
+		_ui_rotation_tween.tween_property(scroll_horizontal, \"value\", 50.0, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+"
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tsy18"]
+top_radius = 1.012207
+bottom_radius = 1.012207
+height = 0.3501587
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h4f5v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3icin"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pe0dl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_snlk8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_admcv"]
+content_margin_left = 15.0
+content_margin_top = 5.0
+content_margin_right = 15.0
+content_margin_bottom = 5.0
+
+[node name="CreateCharacter" type="Control" unique_id=523563760]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_jhet3")
+scene_path = ExtResource("1_em00p")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1956851190]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.019751295, 0.17177999, 0.47606677, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=274911821]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1182672638]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelCategoria" type="PanelContainer" parent="VBoxContainer/HBoxContainer2" unique_id=952936804]
+visible = false
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_75a12")
+script = ExtResource("3_1rm87")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelCategoria" unique_id=1157649572]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=1945860044]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="trajes" type="Button" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=825091075]
+layout_mode = 2
+text = "BTN_TRAJES"
+
+[node name="shaper" type="Button" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=1418051852]
+layout_mode = 2
+text = "BTN_SHAPER"
+
+[node name="shader" type="Button" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=759245274]
+layout_mode = 2
+text = "BTN_SHADER"
+
+[node name="blibioteca" type="Button" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=1699943560]
+layout_mode = 2
+text = "BTN_BLIBIOTECA"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=971840005]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelCategoria/VBoxContainer" unique_id=1205515217]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2" unique_id=1325867836]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1162616191]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=928359246]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1613534925 node_paths=PackedStringArray("scroll_horizontal", "scroll_vertical")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+script = SubResource("GDScript_tg4hv")
+scroll_horizontal = NodePath("../../RotationHorizontal")
+scroll_vertical = NodePath("../PanVertical")
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" unique_id=314886400]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 3
+screen_space_aa = 1
+size = Vector2i(782, 667)
+render_target_update_mode = 4
+
+[node name="MarkPlayer" type="Node3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=308636344]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="BodyPlayer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/MarkPlayer" unique_id=2103071354 instance=ExtResource("3_h4f5v")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/MarkPlayer" unique_id=543777043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.18374634, 0)
+mesh = SubResource("CylinderMesh_tsy18")
+
+[node name="Camera3D" type="Camera3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=1613898092]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04, 2.0264664)
+projection = 1
+size = 3.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=813239754]
+transform = Transform3D(1, 0, 0, 0, 0.77733773, 0.6290835, 0, -0.6290835, 0.77733773, 0, 0, 0)
+shadow_enabled = true
+
+[node name="PanVertical" type="VSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1442065376]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h4f5v")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_3icin")
+value = 50.0
+
+[node name="RotationHorizontal" type="HSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1634856410]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_pe0dl")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_snlk8")
+value = 50.0
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer2" unique_id=587314610]
+layout_mode = 2
+
+[node name="PanelEdicao" type="PanelContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1683097984]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(426, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_75a12")
+script = ExtResource("4_a76cq")
+base_scroll = ExtResource("5_admcv")
+base_option = ExtResource("6_h4f5v")
+base_color = ExtResource("7_3icin")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao" unique_id=1788240842]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=708649233]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="title_edit" type="Label" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=1622424122]
+layout_mode = 2
+text = "Edição do Item X"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=1673131673]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="ContainerEdicao" type="ScrollContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=302264243]
+custom_minimum_size = Vector2(0, 553.846)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_admcv")
+
+[node name="ContainerSuporte" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/ContainerEdicao" unique_id=624589980]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=641244086]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/HBoxContainer" unique_id=1841069896]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="reset" type="Button" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/HBoxContainer" unique_id=169884513]
+layout_mode = 2
+text = "BTN_RESET"
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/HBoxContainer" unique_id=878171178]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="salve" type="Button" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/HBoxContainer" unique_id=824324775]
+layout_mode = 2
+text = "BTN_SALVE"
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer/HBoxContainer" unique_id=394512044]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer" unique_id=502703220]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="return" type="Button" parent="VBoxContainer" unique_id=1310553952]
+layout_mode = 2
+text = "BTN_RETURN"
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/PanVertical" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_pan_vertical_value_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="pressed" from="VBoxContainer/return" to="." method="_on_return_pressed"]

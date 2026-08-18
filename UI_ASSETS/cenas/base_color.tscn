@@ -1,0 +1,183 @@
+[gd_scene format=3 uid="uid://c8vmfubnc8281"]
+
+[ext_resource type="StyleBox" uid="uid://cyqhpcpbthvm2" path="res://UI_ASSETS/themes/panel_expan_select.tres" id="1_dshgw"]
+[ext_resource type="ButtonGroup" uid="uid://br3tmjod6460w" path="res://UI_ASSETS/grupos/list_edit_character.tres" id="2_38x8d"]
+
+[sub_resource type="GDScript" id="GDScript_dshgw"]
+resource_name = "BaseColor"
+script/source = "extends PanelContainer
+
+@export var groupbutton: ButtonGroup
+@export var cor: Color = Color.WHITE
+
+@onready var button_title: Button = $VBoxContainer/ButtonTitle
+@onready var v_box_container: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var color_picker: ColorPickerButton = $VBoxContainer/VBoxContainer/HBoxContainer/color
+
+var shader_material: ShaderMaterial
+var shader_parameter: StringName
+
+
+func _ready() -> void:
+	if not color_picker.color_changed.is_connected(_on_color_changed):
+		color_picker.color_changed.connect(_on_color_changed)
+
+
+func configurar(data: Dictionary) -> void:
+	button_title.text = str(data.get(\"nome\", \"Cor\")).capitalize()
+	shader_material = data.get(\"material\") as ShaderMaterial
+	shader_parameter = StringName(data.get(\"shader_parameter\", &\"\"))
+
+	var current_value: Variant = data.get(\"valor\", cor)
+
+	if typeof(current_value) == TYPE_COLOR:
+		cor = current_value
+
+	color_picker.set_pick_color(cor)
+
+
+func definir_grupo_select(grupo: ButtonGroup) -> void:
+	groupbutton = grupo
+	button_title.toggle_mode = true
+	button_title.button_group = grupo
+
+
+func _on_button_title_toggled(toggled_on: bool) -> void:
+	v_box_container.visible = toggled_on
+
+
+func _on_color_changed(new_color: Color) -> void:
+	cor = new_color
+
+	if shader_material == null or shader_parameter.is_empty():
+		return
+
+	shader_material.set_shader_parameter(shader_parameter, cor)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_38x8d"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.16470589, 0.67058825, 0.83137256, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5463h"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ndqax"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.16470589, 0.67058825, 0.83137256, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4712785, 0.8406135, 0.9809024, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4dtg8"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dshgw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_38x8d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5463h"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ndqax"]
+
+[sub_resource type="GDScript" id="GDScript_u68p5"]
+resource_name = "ColorPickerCuton"
+script/source = "extends ColorPickerButton
+
+const TAMANHO_BASE = Vector2(298.0, 334.0)
+
+func _ready() -> void:
+	var picker: ColorPicker = get_picker()
+	
+	picker.color_modes_visible = false
+	picker.sliders_visible = false
+	picker.hex_visible = false
+	picker.sampler_visible = false
+	picker.picker_shape = ColorPicker.SHAPE_VHS_CIRCLE
+	
+"
+
+[node name="base_color" type="PanelContainer" unique_id=83006901]
+offset_right = 161.0
+offset_bottom = 61.0
+theme_override_styles/panel = ExtResource("1_dshgw")
+script = SubResource("GDScript_dshgw")
+groupbutton = ExtResource("2_38x8d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=325588197]
+layout_mode = 2
+
+[node name="ButtonTitle" type="Button" parent="VBoxContainer" unique_id=22333927]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_38x8d")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5463h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ndqax")
+toggle_mode = true
+text = "TITLE_BASE_COLOR"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=471867442]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=1346637199]
+layout_mode = 2
+
+[node name="HSeparator" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1578265748]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="color" type="ColorPickerButton" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=282143390]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4dtg8")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dshgw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_38x8d")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_5463h")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ndqax")
+edit_alpha = false
+edit_intensity = false
+script = SubResource("GDScript_u68p5")
+
+[node name="HSeparator2" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=496889989]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[connection signal="toggled" from="VBoxContainer/ButtonTitle" to="." method="_on_button_title_toggled"]

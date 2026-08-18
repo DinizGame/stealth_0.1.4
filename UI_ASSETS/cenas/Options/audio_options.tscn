@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://ltujj3op0fw3"]
+
+[ext_resource type="PackedScene" uid="uid://bl6wyev1ft8sm" path="res://UI_ASSETS/cenas/audio_base.tscn" id="1_6w6sr"]
+[ext_resource type="Script" uid="uid://dan1fdeeahm2w" path="res://UI_ASSETS/script/audio_options.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://wvvrrxk70gfm" path="res://UI_ASSETS/script/section_actions.gd" id="3_kt1sc"]
+
+[node name="AudioOptions" type="ScrollContainer" unique_id=1066269532]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+metadata/_tab_index = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1519799248]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1340979228]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="AudioBase" parent="VBoxContainer" unique_id=926352885 instance=ExtResource("1_6w6sr")]
+layout_mode = 2
+id = "master"
+titulo = "KEY_AUDIO_GERAL"
+
+[node name="AudioBase2" parent="VBoxContainer" unique_id=868343426 instance=ExtResource("1_6w6sr")]
+layout_mode = 2
+id = "music"
+titulo = "KEY_AUDIO_MUSIC"
+
+[node name="AudioBase3" parent="VBoxContainer" unique_id=1028532323 instance=ExtResource("1_6w6sr")]
+layout_mode = 2
+id = "sfx"
+titulo = "KEY_AUDIO_SFX"
+
+[node name="HSeparatorActions" type="HSeparator" parent="VBoxContainer" unique_id=597775094]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SectionActions" type="HBoxContainer" parent="VBoxContainer" unique_id=1779531808]
+layout_mode = 2
+alignment = 2
+script = ExtResource("3_kt1sc")
+secao = 2
+
+[node name="RestoreSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=1642346870]
+layout_mode = 2
+text = "BTN_RESTORE_SECTION"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/SectionActions" unique_id=1390946319]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=2067617882]
+layout_mode = 2
+text = "BTN_SAVE_SECTION"
+
+[connection signal="pressed" from="VBoxContainer/SectionActions/RestoreSection" to="." method="_on_restaurar_secao_pressed"]
+[connection signal="pressed" from="VBoxContainer/SectionActions/SaveSection" to="." method="_on_salvar_secao_pressed"]

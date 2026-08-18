@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bikmg0lf8fksf"]
+
+[ext_resource type="Texture2D" uid="uid://t78a0ibw8m3c" path="res://UI_ASSETS/icon/exit.png" id="1_o2dla"]
+[ext_resource type="Texture2D" uid="uid://cdewdmbva20um" path="res://UI_ASSETS/icon/exit_red.png" id="2_p5f5m"]
+
+[sub_resource type="GDScript" id="GDScript_eny4p"]
+resource_name = "btn_return"
+script/source = "extends VBoxContainer
+
+signal pressed
+
+
+func _on_return_pressed() -> void:
+	pressed.emit()
+"
+
+[node name="BTN_RETURN" type="VBoxContainer" unique_id=1199768495]
+theme_override_constants/separation = -20
+script = SubResource("GDScript_eny4p")
+
+[node name="return" type="TextureButton" parent="." unique_id=469050366]
+layout_mode = 2
+texture_normal = ExtResource("1_o2dla")
+texture_hover = ExtResource("2_p5f5m")
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="." unique_id=1840791988]
+layout_mode = 2
+text = "BTN_RETURN"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="return" to="." method="_on_return_pressed"]

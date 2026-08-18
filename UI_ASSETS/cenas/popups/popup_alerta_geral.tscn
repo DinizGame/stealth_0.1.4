@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://cqn4d7imqovwc"]
+
+[ext_resource type="Script" uid="uid://wmlvf7e4hfcn" path="res://UI_ASSETS/script/popups/popup_alerta_geral.gd" id="1_alert"]
+
+[sub_resource type="Theme" id="Theme_26gk4"]
+default_font_size = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
+bg_color = Color(0, 0, 0, 0.72)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.03529412, 0.02745098, 0.02352941, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.55, 0.18, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="PopupAlertaGeral" type="Control" unique_id=473232389]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_26gk4")
+script = ExtResource("1_alert")
+
+[node name="Bloqueador" type="Panel" parent="." unique_id=609086540]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay")
+
+[node name="CenterContainer" type="CenterContainer" parent="Bloqueador" unique_id=422776315]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Bloqueador/CenterContainer" unique_id=832990775]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Bloqueador/CenterContainer/PanelContainer" unique_id=146742037]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TituloLabel" type="Label" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1709612677]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "POPUP_ALERTA_TITULO"
+horizontal_alignment = 1
+
+[node name="MensagemLabel" type="Label" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1534145039]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(472, 23)
+layout_mode = 2
+size_flags_vertical = 3
+text = "POPUP_ALERTA_MENSAGEM"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1299650326]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BtCancelar" type="Button" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1953039997]
+custom_minimum_size = Vector2(210, 0)
+unique_name_in_owner = true
+layout_mode = 2
+text = "BTN_CANCELAR"
+
+[node name="BtAlternativo" type="Button" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=98844619]
+custom_minimum_size = Vector2(210, 0)
+unique_name_in_owner = true
+layout_mode = 2
+text = "BTN_SAIR_SEM_SALVAR"
+
+[node name="BtConfirmar" type="Button" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1077327365]
+custom_minimum_size = Vector2(210, 0)
+unique_name_in_owner = true
+layout_mode = 2
+text = "BTN_CONFIRMAR"
+
+[connection signal="pressed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/BtCancelar" to="." method="_on_bt_cancelar_pressed"]
+[connection signal="pressed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/BtAlternativo" to="." method="_on_bt_alternativo_pressed"]
+[connection signal="pressed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/BtConfirmar" to="." method="_on_bt_confirmar_pressed"]

@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cum0yn2n1f1kh"]
+
+[sub_resource type="GDScript" id="GDScript_mn0uy"]
+resource_name = "collectible"
+script/source = "extends Node3D
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.is_in_group(&\"procedural_training_player\"):
+		body.collectible_itens += 1
+		queue_free()
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tsy18"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddn70"]
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tsy18"]
+material = SubResource("StandardMaterial3D_ddn70")
+
+[node name="CollectibleScene" type="Node3D" unique_id=206101346]
+script = SubResource("GDScript_mn0uy")
+
+[node name="Node3D" type="Node3D" parent="." unique_id=1434981939]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50408864, 0)
+
+[node name="Area3D" type="Area3D" parent="Node3D" unique_id=555708860]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Area3D" unique_id=1827254293]
+shape = SubResource("BoxShape3D_tsy18")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D" unique_id=986214739]
+mesh = SubResource("BoxMesh_tsy18")
+
+[connection signal="body_entered" from="Node3D/Area3D" to="." method="_on_area_3d_body_entered"]

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[sub_resource type="StandardMaterial3D" id="Mat_partition"]
+albedo_color = Color(0.40, 0.36, 0.18, 1)
+roughness = 0.88
+
+[sub_resource type="BoxMesh" id="Mesh_partition"]
+material = SubResource("Mat_partition")
+size = Vector3(2.05, 1.35, 0.22)
+
+[sub_resource type="BoxShape3D" id="Shape_partition"]
+size = Vector3(2.05, 1.35, 0.22)
+
+[node name="PartitionCover" type="StaticBody3D"]
+
+[node name="Panel" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.675, 0)
+mesh = SubResource("Mesh_partition")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.675, 0)
+shape = SubResource("Shape_partition")

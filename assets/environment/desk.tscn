@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[sub_resource type="StandardMaterial3D" id="Mat_desk"]
+albedo_color = Color(0.28, 0.24, 0.12, 1)
+roughness = 0.82
+
+[sub_resource type="BoxMesh" id="Mesh_top"]
+material = SubResource("Mat_desk")
+size = Vector3(2.05, 0.16, 1.05)
+
+[sub_resource type="BoxMesh" id="Mesh_leg"]
+material = SubResource("Mat_desk")
+size = Vector3(0.16, 0.82, 0.16)
+
+[sub_resource type="BoxShape3D" id="Shape_top"]
+size = Vector3(2.05, 0.82, 1.05)
+
+[sub_resource type="BoxMesh" id="Mesh_terminal"]
+size = Vector3(0.62, 0.48, 0.14)
+
+[node name="Desk" type="StaticBody3D"]
+
+[node name="Top" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.82, 0)
+mesh = SubResource("Mesh_top")
+
+[node name="LegA" type="MeshInstance3D" parent="."]
+position = Vector3(-0.82, 0.41, -0.35)
+mesh = SubResource("Mesh_leg")
+
+[node name="LegB" type="MeshInstance3D" parent="."]
+position = Vector3(0.82, 0.41, -0.35)
+mesh = SubResource("Mesh_leg")
+
+[node name="Terminal" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.14, 0.08)
+mesh = SubResource("Mesh_terminal")
+material_override = SubResource("Mat_desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.41, 0)
+shape = SubResource("Shape_top")

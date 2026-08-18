@@ -1,0 +1,29 @@
+[gd_resource type="VisualShader" format=3 uid="uid://moux76n8tqmh"]
+
+[ext_resource type="Texture2D" uid="uid://g52wcgjfdetw" path="res://assets/player/texture/_body/Specular.png" id="1_eny4p"]
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_dbjo2"]
+texture = ExtResource("1_eny4p")
+
+[sub_resource type="VisualShaderNodeMix" id="VisualShaderNodeMix_up41x"]
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_gvk7j"]
+function = 31
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_op1xm"]
+parameter_name = "RoughnessSkin"
+hint = 1
+
+[resource]
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(1760, 0)
+nodes/fragment/79/node = SubResource("VisualShaderNodeTexture_dbjo2")
+nodes/fragment/79/position = Vector2(-80, -260)
+nodes/fragment/80/node = SubResource("VisualShaderNodeMix_up41x")
+nodes/fragment/80/position = Vector2(760, -160)
+nodes/fragment/81/node = SubResource("VisualShaderNodeFloatFunc_gvk7j")
+nodes/fragment/81/position = Vector2(280, -40)
+nodes/fragment/82/node = SubResource("VisualShaderNodeFloatParameter_op1xm")
+nodes/fragment/82/position = Vector2(280, 60)
+nodes/fragment/connections = PackedInt32Array(79, 0, 81, 0, 82, 0, 80, 2, 79, 0, 80, 0, 81, 0, 80, 1, 80, 0, 0, 0)

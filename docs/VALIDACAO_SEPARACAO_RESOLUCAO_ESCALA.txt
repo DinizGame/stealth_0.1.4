@@ -1,0 +1,25 @@
+VALIDAÇÃO ESTÁTICA — SEPARAÇÃO DE RESOLUÇÃO E ESCALA
+
+Projeto: stealth.0.1.3
+Data: 26/07/2026
+
+Verificações aprovadas:
+- Arquivos principais encontrados.
+- Configuração padrão contém resolução, escala da interface e fullscreen.
+- CSV de tradução válido e chave da escala encontrada.
+- Referências res:// verificadas.
+- Scripts alterados sem delimitadores ou funções duplicadas detectáveis.
+- Escalas 75%, 100%, 125% e 150% definidas independentemente.
+- Base virtual da interface fixa em 1280×720.
+- Escala aplicada por Window.content_scale_factor.
+- Resolução física usa a lista própria de resoluções.
+- AutoConfig expõe set_interface_scale(index).
+- Menu gráfico possui seletor independente de escala.
+- Multiplicadores visuais baseados na resolução foram removidos.
+- Conexões da cena gráfica correspondem aos métodos existentes.
+
+Resultado: 13 verificações aprovadas; 0 erros estáticos encontrados.
+
+Limitação:
+Esta validação não substitui abrir o projeto no Godot 4.6 e testar visualmente
+as combinações de resolução, escala, tela cheia, salvar, descartar e restaurar.

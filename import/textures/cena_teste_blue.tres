@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://d0sfts16m43hj"]
+
+[ext_resource type="Texture2D" uid="uid://c8yfu87tgwog5" path="res://assets/cenas/gltf/textures/grid.png" id="1_b88wy"]
+
+[resource]
+cull_mode = 2
+albedo_color = Color(0.301394, 0.610544, 0.866969, 1)
+detail_enabled = true
+detail_albedo = ExtResource("1_b88wy")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true

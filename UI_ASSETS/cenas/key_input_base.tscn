@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://rftch5c64o1b"]
+
+[ext_resource type="Script" uid="uid://cnedjyrcn4o1i" path="res://UI_ASSETS/script/key_input_base.gd" id="1_rgpxa"]
+[ext_resource type="Texture2D" uid="uid://byewgi26576ju" path="res://UI_ASSETS/icon/arrow_rotate.png" id="2_reset_icon"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgpxa"]
+content_margin_left = 5.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_rgpxa"]
+color = Color(0.6955031, 0.6955032, 0.6955029, 1)
+grow_begin = -1.0
+grow_end = -1.0
+thickness = 3
+vertical = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rgpxa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x2pla"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h4p12"]
+bg_color = Color(0.16470589, 0.67058825, 0.83137256, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6w6sr"]
+draw_center = false
+border_width_left = 20
+border_width_top = 20
+border_width_right = 20
+border_width_bottom = 20
+border_color = Color(0.16470589, 0.67058825, 0.83137256, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 5.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dpqqj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x2pla"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="KeyInputBase" type="HBoxContainer" unique_id=747585306]
+offset_right = 1.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+script = ExtResource("1_rgpxa")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1741564116]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rgpxa")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1466252902]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelTitle" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1874505681]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="PanelContainer/HBoxContainer" unique_id=85562350]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_rgpxa")
+
+[node name="IconeTecla" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=1194350444]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+
+[node name="VSeparator2" type="VSeparator" parent="PanelContainer/HBoxContainer" unique_id=1777680877]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_rgpxa")
+
+[node name="key_input" type="Button" parent="PanelContainer" unique_id=625080410]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_x2pla")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_h4p12")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6w6sr")
+toggle_mode = true
+
+[node name="reset_input" type="Button" parent="." unique_id=1338853905]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme_override_icons/icon = ExtResource("2_reset_icon")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_dpqqj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_x2pla")
+flat = true
+expand_icon = true
+
+[connection signal="toggled" from="PanelContainer/key_input" to="." method="_on_key_input_toggled"]
+[connection signal="pressed" from="reset_input" to="." method="_on_reset_input_pressed"]

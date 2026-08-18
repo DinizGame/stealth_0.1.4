@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://dt75c10elgp57"]
+
+[ext_resource type="Script" uid="uid://c6br2ggrr0jra" path="res://UI_ASSETS/script/popups/popup_nome_save.gd" id="1_name"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
+bg_color = Color(0, 0, 0, 0.72)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.03529412, 0.02745098, 0.02352941, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.55, 0.18, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="PopupNomeSave" type="Control" unique_id=584358445]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_name")
+
+[node name="Bloqueador" type="Panel" parent="." unique_id=342777742]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay")
+
+[node name="CenterContainer" type="CenterContainer" parent="Bloqueador" unique_id=785316979]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Bloqueador/CenterContainer" unique_id=1735051309]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Bloqueador/CenterContainer/PanelContainer" unique_id=1262636230]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TituloLabel" type="Label" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1473879351]
+unique_name_in_owner = true
+layout_mode = 2
+text = "POPUP_SAVE_TITULO"
+horizontal_alignment = 1
+
+[node name="MensagemLabel" type="Label" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1161657550]
+unique_name_in_owner = true
+layout_mode = 2
+text = "POPUP_SAVE_MENSAGEM"
+horizontal_alignment = 1
+
+[node name="NomeLineEdit" type="LineEdit" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=705148645]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "POPUP_SAVE_PLACEHOLDER"
+max_length = 32
+
+[node name="ErroLabel" type="Label" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=1468991333]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "POPUP_SAVE_ERRO"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer" unique_id=564629298]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BtCancelar" type="Button" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1721826724]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 28)
+layout_mode = 2
+text = "BTN_CANCELAR"
+
+[node name="BtConfirmar" type="Button" parent="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=328393597]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 28)
+layout_mode = 2
+text = "BTN_CONFIRMAR"
+
+[connection signal="text_changed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/NomeLineEdit" to="." method="_on_nome_line_edit_text_changed"]
+[connection signal="text_submitted" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/NomeLineEdit" to="." method="_on_nome_line_edit_text_submitted"]
+[connection signal="pressed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/BtCancelar" to="." method="_on_bt_cancelar_pressed"]
+[connection signal="pressed" from="Bloqueador/CenterContainer/PanelContainer/VBoxContainer/HBoxContainer/BtConfirmar" to="." method="_on_bt_confirmar_pressed"]

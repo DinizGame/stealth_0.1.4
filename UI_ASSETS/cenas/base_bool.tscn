@@ -1,0 +1,187 @@
+[gd_scene format=3 uid="uid://bbeyywq8qcn0n"]
+
+[ext_resource type="StyleBox" uid="uid://cyqhpcpbthvm2" path="res://UI_ASSETS/themes/panel_expan_select.tres" id="1_4tyqy"]
+
+[sub_resource type="GDScript" id="GDScript_4tyqy"]
+resource_name = "base_bool"
+script/source = "extends PanelContainer
+
+## Grupo externo compartilhado entre os ButtonTitle.
+## Ele controla qual seção fica aberta no panel_edicao.
+@export var groupbutton: ButtonGroup
+
+@onready var v_box_container: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var button_title: Button = $VBoxContainer/ButtonTitle
+
+@onready var button_on: Button = %On
+@onready var button_off: Button = %Off
+
+## Grupo privado usado somente pelos botões ON e OFF.
+var _bool_group: ButtonGroup = ButtonGroup.new()
+
+var bool_toggled: bool = false
+var shader_material: ShaderMaterial
+var shader_parameter: StringName
+
+
+func _ready() -> void:
+	_configurar_grupo_visualizacao()
+	_configurar_grupo_booleano()
+
+
+func configurar(data: Dictionary) -> void:
+	button_title.text = str(data.get(\"nome\", \"Ativado\"))
+
+	shader_material = data.get(\"material\") as ShaderMaterial
+	shader_parameter = StringName(
+		data.get(\"shader_parameter\", &\"\")
+	)
+
+	var current_value: Variant = data.get(\"valor\", false)
+	var enabled: bool = false
+
+	if typeof(current_value) == TYPE_BOOL:
+		enabled = current_value
+
+	bool_toggled = enabled
+	_atualizar_botoes_sem_sinal(enabled)
+
+
+## Configura somente o ButtonTitle.
+## Todos os controles base recebem o mesmo groupbutton do panel_edicao.
+func _configurar_grupo_visualizacao() -> void:
+	button_title.toggle_mode = true
+
+	if groupbutton != null:
+		button_title.button_group = groupbutton
+
+	v_box_container.visible = button_title.button_pressed
+
+
+## Configura um grupo completamente separado para ON e OFF.
+func _configurar_grupo_booleano() -> void:
+	_bool_group.allow_unpress = false
+
+	button_on.toggle_mode = true
+	button_off.toggle_mode = true
+
+	button_on.button_group = _bool_group
+	button_off.button_group = _bool_group
+
+
+func _atualizar_botoes_sem_sinal(enabled: bool) -> void:
+	# set_pressed_no_signal() não desmarca automaticamente
+	# o outro botão do grupo. Por isso definimos os dois.
+	button_on.set_pressed_no_signal(enabled)
+	button_off.set_pressed_no_signal(not enabled)
+
+
+func _on_on_toggled(toggled_on: bool) -> void:
+	# Ao selecionar OFF, o grupo também desmarca ON.
+	# Ignoramos esse segundo sinal.
+	if not toggled_on:
+		return
+
+	_aplicar_valor(true)
+
+
+func _on_off_toggled(toggled_on: bool) -> void:
+	if not toggled_on:
+		return
+
+	_aplicar_valor(false)
+
+
+func _aplicar_valor(enabled: bool) -> void:
+	bool_toggled = enabled
+
+	if shader_material == null:
+		return
+
+	if shader_parameter.is_empty():
+		return
+
+	shader_material.set_shader_parameter(
+		shader_parameter,
+		enabled
+	)
+
+
+func _on_button_title_toggled(toggled_on: bool) -> void:
+	v_box_container.visible = toggled_on
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4tyqy"]
+content_margin_left = 20.0
+content_margin_top = 0.0
+content_margin_right = 20.0
+content_margin_bottom = 0.0
+bg_color = Color(0.5294118, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4712785, 0.8406135, 0.9809024, 1)
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_4tyqy"]
+
+[node name="base_bool" type="PanelContainer" unique_id=83006901]
+offset_right = 180.0
+offset_bottom = 96.0
+theme_override_styles/panel = ExtResource("1_4tyqy")
+script = SubResource("GDScript_4tyqy")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=325588197]
+layout_mode = 2
+
+[node name="ButtonTitle" type="Button" parent="VBoxContainer" unique_id=22333927]
+layout_mode = 2
+toggle_mode = true
+text = "TITLE_BASE_COLOR"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=471867442]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=1346637199]
+layout_mode = 2
+
+[node name="HSeparator" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1578265748]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="On" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1313002752]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 31)
+layout_mode = 2
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4tyqy")
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_4tyqy")
+text = "On   "
+
+[node name="HSeparator2" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=496889989]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="Off" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1614210985]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(76, 31)
+layout_mode = 2
+theme_override_styles/pressed = SubResource("StyleBoxFlat_4tyqy")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_4tyqy")
+text = "Off "
+
+[node name="HSeparator3" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=248478811]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[connection signal="toggled" from="VBoxContainer/ButtonTitle" to="." method="_on_button_title_toggled"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/On" to="." method="_on_on_toggled"]
+[connection signal="toggled" from="VBoxContainer/VBoxContainer/HBoxContainer/Off" to="." method="_on_off_toggled"]

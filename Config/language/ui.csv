@@ -1,0 +1,112 @@
+id,pt,en
+BTN_JOGAR,Jogar,Play
+BTN_EXTRA,Extras,Extras
+BTN_OPTION,Opções,Options
+BTN_CREDITOS,Créditos,Credits
+BTN_EXIT,Sair,Exit
+BTN_RETURN,Voltar,Back
+BTN_RESET_CONFIG,Restaurar,Restore Defaults
+BTN_SALVE_EXIT,Salvar,Save
+BTN_RESET_CONFIG_ALL,Restaurar todos os padrões,Restore All Defaults
+BTN_SALVE_ALL,Salvar Tudo,Save All
+BTN_EXCLUIR,Excluir,Delete
+KEY_TITLE_FULLSCREEN,Tela Cheia,Fullscreen
+KEY_TITLE_INTERFACE_SCALE,Escala da interface,Interface Scale
+KEY_AUDIO_GERAL,Geral,Master
+KEY_AUDIO_MUSIC,Música,Music
+KEY_AUDIO_SFX,Efeito,Effects
+KEY_METODO_IMPUT_TITLE,Controles,Controls
+KEY_ACTION_INTERACTION,Interação,Interact
+KEY_ACTION_ACTION2,Ação,Action
+KEY_ACTION_PAUSE,Pausar,Pause
+KEY_ACTION_POVUP,Subir 'POV' da camera,Upload camera 'POV'
+KEY_ACTION_POVDOWN,Descer 'POV' da camera,Lower the camera 'POV'
+KEY_ACTION_MODEMOVE,Abaixar / Levantar,Lower / Raise
+KEY_ACTION_RUN,Correr,Run
+KEY_ACTION_INVENTORY,Inventário,Inventory
+KEY_ACTION_SPACE,Spaço,Space
+KEY_ACTION_MOVE_UP,Mover Frente,Move Forward
+KEY_ACTION_MOVE_DOWN,Mover Traz,Move Backward
+KEY_ACTION_MOVELEFT,Mover Esquerda,Move Left
+KEY_ACTION_MOVERIGHT,Mover Direita,Move Right
+BTN_ENTRAR_PANEL,Entrar,Open
+TITLE_CREATE_CHARACTER,Customização de personagem,Custon Character
+TITLE_SCENE_TUTORIAL,Tutorial e Treinamento,Tutorial and Training
+TITLE_PROCEDURAL_TRANING,Cenarios Aleatórios,Random Scenarios
+TITLE_MOD_BASE,Em desenvolvimento,Under development
+TITLE_LVL_USER,Level,Level
+TITLE_PROGRESSO_USER,Progresso,Progress
+TITLE_TIME_USER,Tempo de Jogo,Game Time
+TITLE_MONEY_USER,Dinheiro,Money
+TITLE_COLOR,Edite Cores,Edit Colors
+TITLE_CHOTH,Guarda Roupa,Closet
+TITLE_SHAPER,Formato do Corpo,Body Shape
+MS_NEW_KEY,Nova tecla para ,New key for 
+MS_KEY_USED,Tecla já utilizada pela ação: ,Key already used by the action: 
+MS_KEY_WITHOUT_ICON,Tecla não mapeada,Unmapped key
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+KEY_TAB_GAME,Jogo,Game
+KEY_TAB_GRAPHIC,Gráficos,Graphics
+KEY_TAB_AUDIO,Áudio,Audio
+KEY_TAB_INPUT,Controle,Input
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+KEY_IDIOMA_BR,Portugues,Portuguese
+KEY_IDIOMA_EN,Inglês,English
+BTN_CANCELAR,Cancelar,Cancel
+BTN_CONFIRMAR,Confirmar,Confirm
+BTN_CONTINUAR_EDITANDO,Continuar editando,Keep editing
+BTN_SAIR_SEM_SALVAR,Sair sem salvar,Exit without saving
+BTN_NEW_USER,Novo usuário,New user
+BTN_PLAY_GAME,Jogar,Play game
+BTN_EDIT_USER,Editar,Edit
+POPUP_SAVE_TITULO,Criar novo save,Create new save
+POPUP_SAVE_MENSAGEM,Digite o nome do jogador para criar um novo save.,Enter the player name to create a new save.
+POPUP_SAVE_PLACEHOLDER,Nome do jogador,Player name
+POPUP_SAVE_ERRO,O nome precisa ter pelo menos 2 caracteres.,The name must have at least 2 characters.
+POPUP_ALERTA_TITULO,Atenção,Warning
+POPUP_ALERTA_MENSAGEM,Confirme para continuar.,Confirm to continue.
+POPUP_OPCOES_SEM_SALVAR_TITULO,Alterações não salvas,Unsaved changes
+POPUP_OPCOES_SEM_SALVAR_MENSAGEM,Você alterou opções e ainda não salvou. Deseja sair e descartar essas mudanças?,You changed options and have not saved yet. Exit and discard these changes?
+POPUP_DELETE_SAVE_TITULO,Excluir save,Delete save
+POPUP_DELETE_SAVE_MENSAGEM,Tem certeza que deseja excluir este save? Esta ação não pode ser desfeita.,Are you sure you want to delete this save? This action cannot be undone.
+POPUP_EDIT_SAVE_TITULO,Editar save,Edit save
+POPUP_EDIT_SAVE_MENSAGEM,Digite o novo nome deste save.,Enter the new name for this save.
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+HELP_CREATE_CHARACTER,Area dedicada a criação de personagens customizados,Area dedicated to creating custom characters
+HELP_SCENE_TUTORIAL,Aprenda as técnicas do jogo para se tornar o melhor,Learn the game's techniques to become the best.
+HELP_PROCEDURAL_TRANING,Gere cenas procedurais para treinar suas habilidades nos mais diversos cenarios,Generate procedural scenes to hone your skills across a wide variety of scenarios.
+HELP_MOD_BASE,Essa area ainda esta em desenvolvimento! Verifique se essa area ja esta disponivel nas ultimas atulisações,This land is still under development! Check the latest updates to see if this area is already available
+BTN_SAVE_SECTION,Salvar esta seção,Save this section
+BTN_RESTORE_SECTION,Restaurar padrão da seção,Restore section defaults
+BTN_SALVAR_TUDO,Salvar tudo,Save all
+POPUP_OPCOES_SEM_SALVAR_MENSAGEM_LISTA,"As configurações: %s não foram salvas. Deseja salvar tudo, sair sem salvar ou cancelar e retornar à edição?","The following settings were not saved: %s. Do you want to save all, exit without saving, or cancel and return to editing?"
+TITLE_BASE_SAVE,Perfis,Profiles
+PROFILE_NEW,Novo Perfil,New Profile
+POPUP_PROFILE_NAME_TITLE,Novo perfil,New profile
+POPUP_PROFILE_NAME_MESSAGE,Digite um nome para salvar esta customização.,Enter a name to save this customization.
+POPUP_PROFILE_NAME_PLACEHOLDER,Nome do perfil,Profile name
+POPUP_PROFILE_UNSAVED_TITLE,Alterações não salvas,Unsaved changes
+POPUP_PROFILE_UNSAVED_MESSAGE,Existem mudanças na personagem que ainda não foram salvas. Deseja sair e descartá-las?,The character has unsaved changes. Do you want to exit and discard them?

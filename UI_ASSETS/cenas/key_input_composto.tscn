@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://dk4v53pvchsan"]
+
+[ext_resource type="Script" uid="uid://bhjlpem5acun7" path="res://UI_ASSETS/script/key_input_composto.gd" id="1_h53je"]
+[ext_resource type="Texture2D" uid="uid://1rqqthalu8q1" path="res://UI_ASSETS/icon/InputMap/Plus.png" id="2_h53je"]
+[ext_resource type="Texture2D" uid="uid://byxwm1qmgltee" path="res://UI_ASSETS/icon/InputMap/AjusteUI.png" id="3_4ju07"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgpxa"]
+content_margin_left = 5.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_rgpxa"]
+color = Color(0.6955031, 0.6955032, 0.6955029, 1)
+grow_begin = -1.0
+grow_end = -1.0
+thickness = 3
+vertical = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rgpxa"]
+
+[node name="KeyInputComposta" type="HBoxContainer" unique_id=747585306]
+offset_right = 1.0
+offset_bottom = 23.0
+size_flags_horizontal = 3
+script = ExtResource("1_h53je")
+action_id_1 = &"RB"
+action_id_2 = &"UpAction"
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1741564116]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rgpxa")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1466252902]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelTitle" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1874505681]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="PanelContainer/HBoxContainer" unique_id=85562350]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_rgpxa")
+
+[node name="IconeTecla" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=1194350444]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+
+[node name="IconePlus" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=373629121]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("2_h53je")
+expand_mode = 1
+
+[node name="IconeTecla2" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=844116025]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+
+[node name="VSeparator2" type="VSeparator" parent="PanelContainer/HBoxContainer" unique_id=1777680877]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_rgpxa")
+
+[node name="visual_inutio" type="Button" parent="PanelContainer" unique_id=1948319026]
+layout_mode = 2
+disabled = true
+
+[node name="IconeAjustUI" type="TextureRect" parent="." unique_id=800799267]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("3_4ju07")
+expand_mode = 1

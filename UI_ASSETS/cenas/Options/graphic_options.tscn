@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://b0cuisxhj01w"]
+
+[ext_resource type="Script" uid="uid://sm8qmng07614" path="res://UI_ASSETS/script/graphic_options.gd" id="1_4b7p6"]
+[ext_resource type="Script" uid="uid://wvvrrxk70gfm" path="res://UI_ASSETS/script/section_actions.gd" id="2_eurfb"]
+[ext_resource type="StyleBox" uid="uid://cq1e1vxw8i0iq" path="res://UI_ASSETS/themes/btn_hover.tres" id="2_mgvfi"]
+
+[node name="GraphicOptions" type="ScrollContainer" unique_id=8658598]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4b7p6")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1474425597]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=958316929]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="OptionResolution" type="OptionButton" parent="VBoxContainer" unique_id=945047899]
+layout_mode = 2
+alignment = 1
+selected = 0
+item_count = 4
+popup/item_0/text = "HD (1280 x 720) 720p"
+popup/item_0/id = 0
+popup/item_1/text = "Full HD (1920 x 1080) 1080p"
+popup/item_1/id = 1
+popup/item_2/text = "2K | QHD (2560 x 1440) 1440p"
+popup/item_2/id = 2
+popup/item_3/text = "4K | UHD (3840 x 2160) 2160p"
+popup/item_3/id = 3
+
+[node name="LabelInterfaceScale" type="Label" parent="VBoxContainer" unique_id=432058999]
+layout_mode = 2
+text = "KEY_TITLE_INTERFACE_SCALE"
+
+[node name="OptionInterfaceScale" type="OptionButton" parent="VBoxContainer" unique_id=1363750001]
+layout_mode = 2
+alignment = 1
+selected = 1
+item_count = 3
+popup/item_0/text = "75%"
+popup/item_0/id = 0
+popup/item_1/text = "100%"
+popup/item_1/id = 1
+popup/item_2/text = "125%"
+popup/item_2/id = 2
+
+[node name="OptionFullscreen" type="CheckButton" parent="VBoxContainer" unique_id=1949875611]
+layout_mode = 2
+theme_override_styles/hover = ExtResource("2_mgvfi")
+theme_override_styles/hover_pressed = ExtResource("2_mgvfi")
+button_pressed = true
+text = "KEY_TITLE_FULLSCREEN"
+
+[node name="HSeparatorActions" type="HSeparator" parent="VBoxContainer" unique_id=1903362781]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SectionActions" type="HBoxContainer" parent="VBoxContainer" unique_id=735520840]
+layout_mode = 2
+alignment = 2
+script = ExtResource("2_eurfb")
+secao = 1
+
+[node name="RestoreSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=1055189555]
+layout_mode = 2
+text = "BTN_RESTORE_SECTION"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/SectionActions" unique_id=1668881023]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=1138156670]
+layout_mode = 2
+text = "BTN_SAVE_SECTION"
+
+[connection signal="item_selected" from="VBoxContainer/OptionResolution" to="." method="_on_option_resolution_item_selected"]
+[connection signal="pressed" from="VBoxContainer/OptionResolution" to="." method="_on_option_resolution_pressed"]
+[connection signal="item_selected" from="VBoxContainer/OptionInterfaceScale" to="." method="_on_option_interface_scale_item_selected"]
+[connection signal="pressed" from="VBoxContainer/OptionInterfaceScale" to="." method="_on_option_interface_scale_pressed"]
+[connection signal="toggled" from="VBoxContainer/OptionFullscreen" to="." method="_on_option_fullscreen_toggled"]
+[connection signal="pressed" from="VBoxContainer/SectionActions/RestoreSection" to="." method="_on_restaurar_secao_pressed"]
+[connection signal="pressed" from="VBoxContainer/SectionActions/SaveSection" to="." method="_on_salvar_secao_pressed"]

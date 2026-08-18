@@ -1,0 +1,177 @@
+[gd_scene format=3 uid="uid://t5bojtsjjr7c"]
+
+[ext_resource type="PackedScene" uid="uid://rftch5c64o1b" path="res://UI_ASSETS/cenas/key_input_base.tscn" id="1_202ih"]
+[ext_resource type="PackedScene" uid="uid://dk4v53pvchsan" path="res://UI_ASSETS/cenas/key_input_composto.tscn" id="2_jfwaj"]
+[ext_resource type="Script" uid="uid://cr1mx8kfk4hik" path="res://UI_ASSETS/script/input_option.gd" id="3_script"]
+[ext_resource type="Script" uid="uid://wvvrrxk70gfm" path="res://UI_ASSETS/script/section_actions.gd" id="4_51a36"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lie3v"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+
+[node name="InputOption" type="ScrollContainer" unique_id=558793701]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_script")
+metadata/_tab_index = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=239842628]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=450950508]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1115607398]
+layout_mode = 2
+
+[node name="MetodoInputTitle" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=2041162237]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "KEY_METODO_IMPUT_TITLE"
+
+[node name="MetodoInputOption" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=1529910709]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 3
+popup/item_0/text = "PC"
+popup/item_0/id = 0
+popup/item_1/text = "Xbox"
+popup/item_1/id = 1
+popup/item_2/text = "Playstation"
+popup/item_2/id = 2
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1697513420]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="KeyInputOptions" type="ScrollContainer" parent="VBoxContainer" unique_id=1061509151]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_lie3v")
+
+[node name="InputPC" type="VBoxContainer" parent="VBoxContainer/KeyInputOptions" unique_id=767009131]
+custom_minimum_size = Vector2(680, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="KeyInputBase" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=747585306 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Interact"
+titulo = "KEY_ACTION_INTERACTION"
+
+[node name="KeyInputBase9" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=504334611 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Action2"
+titulo = "KEY_ACTION_ACTION2"
+
+[node name="KeyInputBase2" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1779935040 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Pause"
+titulo = "KEY_ACTION_PAUSE"
+
+[node name="KeyInputBase3" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=315274485 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Inventory"
+titulo = "KEY_ACTION_INVENTORY"
+
+[node name="KeyInputBase4" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1296059669 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Space"
+titulo = "KEY_ACTION_SPACE"
+
+[node name="KeyInputBase12" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1543850255 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"ModeMove"
+titulo = "KEY_ACTION_MODEMOVE"
+
+[node name="KeyInputBase13" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=63588107 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"Run"
+titulo = "KEY_ACTION_RUN"
+
+[node name="PovUp" type="HBoxContainer" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1509301405]
+layout_mode = 2
+
+[node name="KeyInputBaseUp" parent="VBoxContainer/KeyInputOptions/InputPC/PovUp" unique_id=112198320 instance=ExtResource("1_202ih")]
+unique_name_in_owner = true
+layout_mode = 2
+action_id = &"RB"
+titulo = "KEY_ACTION_POVUP"
+
+[node name="KeyInputCompostaUp" parent="VBoxContainer/KeyInputOptions/InputPC/PovUp" unique_id=232135231 instance=ExtResource("2_jfwaj")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+titulo = "KEY_ACTION_POVUP"
+
+[node name="PovDown" type="HBoxContainer" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=978256812]
+layout_mode = 2
+
+[node name="KeyInputBaseDown" parent="VBoxContainer/KeyInputOptions/InputPC/PovDown" unique_id=1613237546 instance=ExtResource("1_202ih")]
+unique_name_in_owner = true
+layout_mode = 2
+action_id = &"LB"
+titulo = "KEY_ACTION_POVDOWN"
+
+[node name="KeyInputCompostaDown" parent="VBoxContainer/KeyInputOptions/InputPC/PovDown" unique_id=29686580 instance=ExtResource("2_jfwaj")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+titulo = "KEY_ACTION_POVDOWN"
+action_id_2 = &"DownAction"
+
+[node name="KeyInputBase5" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1579081570 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"MoveUp"
+titulo = "KEY_ACTION_MOVE_UP"
+
+[node name="KeyInputBase6" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=1521678047 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"MoveDown"
+titulo = "KEY_ACTION_MOVE_DOWN"
+
+[node name="KeyInputBase7" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=105812205 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"MoveLeft"
+titulo = "KEY_ACTION_MOVELEFT"
+
+[node name="KeyInputBase8" parent="VBoxContainer/KeyInputOptions/InputPC" unique_id=695617091 instance=ExtResource("1_202ih")]
+layout_mode = 2
+action_id = &"MoveRight"
+titulo = "KEY_ACTION_MOVERIGHT"
+
+[node name="HSeparatorActions" type="HSeparator" parent="VBoxContainer" unique_id=213714593]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="SectionActions" type="HBoxContainer" parent="VBoxContainer" unique_id=1216470122]
+layout_mode = 2
+alignment = 2
+script = ExtResource("4_51a36")
+secao = 3
+
+[node name="RestoreSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=522011083]
+layout_mode = 2
+text = "BTN_RESTORE_SECTION"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/SectionActions" unique_id=1119125494]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveSection" type="Button" parent="VBoxContainer/SectionActions" unique_id=1466970389]
+layout_mode = 2
+text = "BTN_SAVE_SECTION"
+
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer/MetodoInputOption" to="." method="_on_metodo_input_option_item_selected"]
+[connection signal="pressed" from="VBoxContainer/SectionActions/RestoreSection" to="." method="_on_restaurar_secao_pressed"]
+[connection signal="pressed" from="VBoxContainer/SectionActions/SaveSection" to="." method="_on_salvar_secao_pressed"]

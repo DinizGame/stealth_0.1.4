@@ -1,0 +1,16 @@
+VALIDAÇÃO — CONFIGURAÇÕES INDEPENDENTES POR SEÇÃO
+
+Verificações realizadas:
+- AutoConfig possui enum e APIs por seção.
+- Salvamento parcial preserva as demais seções do user_local.cfg.
+- Cada cena de aba possui Salvar seção e Restaurar padrão da seção.
+- A cena de inputs usa script externo reutilizável.
+- Popup geral suporta três decisões.
+- Menu principal lista somente seções pendentes.
+- Ações globais permanecem no gerenciador do menu principal.
+- Referências básicas de arquivos e cenas verificadas.
+
+Limitação desta validação:
+- O executável do Godot não está instalado neste ambiente; portanto, não foi
+  possível executar o projeto ou fazer validação de parser/headless pelo motor.
+- Recomenda-se abrir o projeto no Godot e testar os cenários descritos no relatório.

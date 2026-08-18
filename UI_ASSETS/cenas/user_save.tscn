@@ -1,0 +1,313 @@
+[gd_scene format=3 uid="uid://t1eo7x0rgmxw"]
+
+[ext_resource type="Texture2D" uid="uid://8agtgegruj44" path="res://UI_ASSETS/icon/delete.png" id="1_oabor"]
+[ext_resource type="Texture2D" uid="uid://ct63ysm43dehp" path="res://UI_ASSETS/icon/wrench.png" id="2_6qa8f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b3ce5"]
+
+[sub_resource type="GDScript" id="GDScript_fo0i4"]
+resource_name = "user_save"
+script/source = "extends PanelContainer
+
+@warning_ignore(\"unused_signal\")
+signal carregar_jogo_solicitado(id: String)
+
+const POPUP_ALERTA_GERAL := preload(\"res://UI_ASSETS/cenas/popups/popup_alerta_geral.tscn\")
+const POPUP_NOME_SAVE := preload(\"res://UI_ASSETS/cenas/popups/popup_nome_save.tscn\")
+
+@onready var user_plus: VBoxContainer = $HBoxContainer/VBoxContainer/user_plus
+@onready var select_user: Button = $HBoxContainer/VBoxContainer/select_user
+@onready var value_time: Label = $HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/time/value_time
+@onready var value_progreso: Label = $HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/progresso/value_progresso
+@onready var value_lvl: Label = $HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/lvl/value_lvl
+@onready var value_money: Label = $HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/money/value_money
+
+
+
+var current_user_id: String = \"\"
+var current_user_name: String = \"\"
+var current_metadata: Dictionary = {}
+
+func setup(id: String, meta: Dictionary) -> void:
+	current_user_id = id
+	current_metadata = meta.duplicate()
+
+	current_user_name = str(meta.get(\"nome\", id))
+	select_user.text = current_user_name
+
+	_atualizar_informacoes_visuais()
+	
+func _atualizar_informacoes_visuais() -> void:
+	var tempo_jogo = current_metadata.get(\"tempo_jogo\", 0)
+	var progresso := int(current_metadata.get(\"progresso\", 0))
+	var level := int(current_metadata.get(\"level\", 1))
+	var money := int(current_metadata.get(\"money\", 0))
+
+	value_time.text = _formatar_tempo(tempo_jogo)
+	value_progreso.text = str(progresso) + \"%\"
+	value_lvl.text = str(level)
+	value_money.text = str(money)
+
+func _formatar_tempo(valor) -> String:
+	var segundos := int(valor)
+
+	@warning_ignore(\"integer_division\")
+	var horas := segundos / 3600
+	@warning_ignore(\"integer_division\")
+	var minutos := (segundos % 3600) / 60
+
+	return \"%02dh %02dm\" % [horas, minutos]
+
+func definir_grupo_select(grupo: ButtonGroup) -> void:
+	select_user.toggle_mode = true
+	select_user.button_group = grupo
+
+
+func _on_delete_user_pressed() -> void:
+	var popup = POPUP_ALERTA_GERAL.instantiate()
+
+	get_tree().root.add_child(popup)
+
+	popup.configurar(
+		\"POPUP_DELETE_SAVE_TITULO\",
+		\"POPUP_DELETE_SAVE_MENSAGEM\",
+		\"BTN_CANCELAR\",
+		\"BTN_EXCLUIR\"
+	)
+
+	popup.confirmado.connect(_confirmar_exclusao_save)
+	popup.cancelado.connect(_cancelar_exclusao_save)
+
+func _confirmar_edicao_nome(novo_nome: String) -> void:
+	novo_nome = novo_nome.strip_edges()
+
+	if novo_nome == current_user_name:
+		return
+
+	var nome_final := UserSave.rename_save(
+		current_user_id,
+		novo_nome
+	)
+
+	if nome_final == \"\":
+		push_error(\"Falha ao renomear o save: \" + current_user_id)
+		return
+
+	current_user_name = nome_final
+	current_metadata[\"nome\"] = nome_final
+	select_user.text = nome_final
+
+func _confirmar_exclusao_save() -> void:
+	UserSave.delete_save(current_user_id)
+	queue_free()
+
+
+func _cancelar_exclusao_save() -> void:
+	print(\"Exclusão de save cancelada.\")
+
+
+func _on_select_user_toggled(toggled_on: bool) -> void:
+	user_plus.visible = toggled_on
+	_set_draw_center(toggled_on)
+
+func _set_draw_center(ativo: bool) -> void:
+	var stylebox := get_theme_stylebox(\"panel\")
+	if stylebox == null:
+		return
+	stylebox = stylebox.duplicate()
+	if stylebox is StyleBoxFlat:
+		stylebox.draw_center = ativo
+	elif stylebox is StyleBoxTexture:
+		stylebox.draw_center = ativo
+	else:
+		return
+	add_theme_stylebox_override(\"panel\", stylebox)
+
+func _on_edit_user_pressed() -> void:
+	var popup = POPUP_NOME_SAVE.instantiate()
+	get_tree().root.add_child(popup)
+
+	popup.configurar(
+		\"POPUP_EDIT_SAVE_TITULO\",
+		\"POPUP_EDIT_SAVE_MENSAGEM\",
+		\"POPUP_SAVE_PLACEHOLDER\",
+		current_user_name
+	)
+
+	popup.nome_confirmado.connect(_confirmar_edicao_nome)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bkw75"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+border_blend = true
+expand_margin_left = 3.0
+expand_margin_right = 3.0
+
+[sub_resource type="Theme" id="Theme_knem6"]
+Label/styles/normal = SubResource("StyleBoxFlat_bkw75")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mgnkf"]
+
+[node name="user_save" type="PanelContainer" unique_id=1878138647]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_b3ce5")
+script = SubResource("GDScript_fo0i4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=612546161]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=1046583410]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 200
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1778193642]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="select_user" type="Button" parent="HBoxContainer/VBoxContainer" unique_id=1629268582]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Teste player x"
+
+[node name="user_plus" type="VBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=229163431]
+visible = false
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/VBoxContainer/user_plus" unique_id=190997023]
+layout_mode = 2
+theme = SubResource("Theme_knem6")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mgnkf")
+
+[node name="infor_user" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer" unique_id=1903605246]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=1476333436]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="time" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=2036473212]
+layout_mode = 2
+
+[node name="title_time" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/time" unique_id=1447137619]
+layout_mode = 2
+text = "TITLE_TIME_USER"
+
+[node name="value_time" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/time" unique_id=886111950]
+layout_mode = 2
+text = "100:00"
+
+[node name="VSeparator3" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=1790708205]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="progresso" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=295420736]
+layout_mode = 2
+
+[node name="title_progresso" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/progresso" unique_id=1702768456]
+layout_mode = 2
+text = "TITLE_PROGRESSO_USER"
+
+[node name="value_progresso" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/progresso" unique_id=562859595]
+layout_mode = 2
+text = "100"
+
+[node name="VSeparator4" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=199860568]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="lvl" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=1920695691]
+layout_mode = 2
+
+[node name="title_lvl" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/lvl" unique_id=1799128994]
+layout_mode = 2
+text = "TITLE_LVL_USER"
+
+[node name="value_lvl" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/lvl" unique_id=579350778]
+layout_mode = 2
+text = "100"
+
+[node name="VSeparator5" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=1885396906]
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="money" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=31616644]
+layout_mode = 2
+
+[node name="title_money" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/money" unique_id=703370084]
+layout_mode = 2
+text = "TITLE_MONEY_USER"
+
+[node name="value_money" type="Label" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user/money" unique_id=1721561189]
+layout_mode = 2
+text = "$99999"
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/PanelContainer/infor_user" unique_id=1978072922]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus" unique_id=1128644738]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="edit_menu_user" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/user_plus" unique_id=1017543376]
+layout_mode = 2
+
+[node name="VSeparator4" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=705562254]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="delete_user" type="Button" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=2105465203]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_icons/icon = ExtResource("1_oabor")
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=1024776402]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="edit_user" type="Button" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=1367511132]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_icons/icon = ExtResource("2_6qa8f")
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=1918803229]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="jogar" type="Button" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=368837339]
+layout_mode = 2
+text = "play"
+
+[node name="VSeparator3" type="VSeparator" parent="HBoxContainer/VBoxContainer/user_plus/edit_menu_user" unique_id=1681847458]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VBoxContainer/user_plus" unique_id=14788521]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer" unique_id=52192002]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 200
+
+[connection signal="toggled" from="HBoxContainer/VBoxContainer/select_user" to="." method="_on_select_user_toggled"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/user_plus/edit_menu_user/delete_user" to="." method="_on_delete_user_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/user_plus/edit_menu_user/edit_user" to="." method="_on_edit_user_pressed"]

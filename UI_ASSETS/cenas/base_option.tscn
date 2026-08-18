@@ -1,0 +1,219 @@
+[gd_scene format=3 uid="uid://qqs57asvs7g1"]
+
+[ext_resource type="ButtonGroup" uid="uid://br3tmjod6460w" path="res://UI_ASSETS/grupos/list_edit_character.tres" id="1_0pkd4"]
+[ext_resource type="StyleBox" uid="uid://cyqhpcpbthvm2" path="res://UI_ASSETS/themes/panel_expan_select.tres" id="1_56boy"]
+[ext_resource type="Texture2D" uid="uid://dinwl4te5wjfe" path="res://UI_ASSETS/icon/ceta_1.png" id="2_75a12"]
+[ext_resource type="Texture2D" uid="uid://eyncqvjbjxgb" path="res://UI_ASSETS/icon/ceta_red_1.png" id="3_75a12"]
+
+[sub_resource type="GDScript" id="GDScript_wpmbh"]
+resource_name = "BaseOption"
+script/source = "extends PanelContainer
+
+@export var groupbutton: ButtonGroup
+@export_dir var pasta_opcoes: String
+@export var textura: Texture2D
+
+@onready var button_title: Button = $VBoxContainer/ButtonTitle
+@onready var v_box_container: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var previous_button: TextureButton = $VBoxContainer/VBoxContainer/HBoxContainer/previous
+@onready var option_button: OptionButton = $VBoxContainer/VBoxContainer/HBoxContainer/option
+@onready var next_button: TextureButton = $VBoxContainer/VBoxContainer/HBoxContainer/next
+
+var shader_material: ShaderMaterial
+var shader_parameter: StringName
+var _texturas: Array[Texture2D] = []
+
+
+func _ready() -> void:
+	if not option_button.item_selected.is_connected(_on_option_selected):
+		option_button.item_selected.connect(_on_option_selected)
+
+	if not previous_button.pressed.is_connected(_on_previous_pressed):
+		previous_button.pressed.connect(_on_previous_pressed)
+
+	if not next_button.pressed.is_connected(_on_next_pressed):
+		next_button.pressed.connect(_on_next_pressed)
+
+
+func configurar(data: Dictionary) -> void:
+	button_title.text = str(data.get(\"nome\", \"Textura\")).capitalize()
+	shader_material = data.get(\"material\") as ShaderMaterial
+	shader_parameter = StringName(data.get(\"shader_parameter\", &\"\"))
+	pasta_opcoes = str(data.get(\"option_folder\", \"\"))
+
+	var current_value: Variant = data.get(\"valor\")
+
+	if current_value is Texture2D:
+		textura = current_value
+
+	_carregar_texturas_da_pasta()
+
+
+func definir_grupo_select(grupo: ButtonGroup) -> void:
+	groupbutton = grupo
+	button_title.toggle_mode = true
+	button_title.button_group = grupo
+
+
+func _on_button_title_toggled(toggled_on: bool) -> void:
+	v_box_container.visible = toggled_on
+
+
+func _carregar_texturas_da_pasta() -> void:
+	option_button.clear()
+	_texturas.clear()
+
+	if pasta_opcoes.is_empty():
+		_mostrar_lista_vazia(\"Pasta não informada\")
+		return
+
+	var arquivos: PackedStringArray = ResourceLoader.list_directory(
+		pasta_opcoes.trim_suffix(\"/\")
+	)
+	arquivos.sort()
+
+	var selected_index: int = -1
+	var current_path: String = \"\"
+
+	if textura != null:
+		current_path = textura.resource_path
+
+	for arquivo: String in arquivos:
+		if arquivo.ends_with(\"/\"):
+			continue
+
+		var resource_path: String = pasta_opcoes.path_join(arquivo)
+		var resource: Resource = ResourceLoader.load(
+			resource_path,
+			\"Texture2D\"
+		)
+
+		if not resource is Texture2D:
+			continue
+
+		var texture_option: Texture2D = resource as Texture2D
+		var index: int = option_button.item_count
+
+		_texturas.append(texture_option)
+		option_button.add_icon_item(texture_option, _formatar_nome(arquivo))
+		option_button.set_item_metadata(index, resource_path)
+
+		if not current_path.is_empty() and resource_path == current_path:
+			selected_index = index
+
+	if _texturas.is_empty():
+		_mostrar_lista_vazia(\"Nenhuma textura encontrada\")
+		return
+
+	if selected_index < 0:
+		selected_index = 0
+
+	option_button.disabled = false
+	previous_button.disabled = _texturas.size() <= 1
+	next_button.disabled = _texturas.size() <= 1
+	option_button.select(selected_index)
+
+
+func _mostrar_lista_vazia(texto: String) -> void:
+	option_button.add_item(texto)
+	option_button.disabled = true
+	previous_button.disabled = true
+	next_button.disabled = true
+
+
+func _formatar_nome(arquivo: String) -> String:
+	return arquivo.get_basename().replace(\"_\", \" \").capitalize()
+
+
+func _on_option_selected(index: int) -> void:
+	_selecionar_textura(index)
+
+
+func _on_previous_pressed() -> void:
+	if _texturas.is_empty():
+		return
+
+	var index: int = option_button.selected
+
+	if index < 0:
+		index = 0
+
+	index = (index - 1 + _texturas.size()) % _texturas.size()
+	option_button.select(index)
+	_selecionar_textura(index)
+
+
+func _on_next_pressed() -> void:
+	if _texturas.is_empty():
+		return
+
+	var index: int = option_button.selected
+	index = (index + 1) % _texturas.size()
+
+	option_button.select(index)
+	_selecionar_textura(index)
+
+
+func _selecionar_textura(index: int) -> void:
+	if index < 0 or index >= _texturas.size():
+		return
+
+	textura = _texturas[index]
+
+	if shader_material == null or shader_parameter.is_empty():
+		return
+
+	shader_material.set_shader_parameter(shader_parameter, textura)
+"
+
+[node name="base_option" type="PanelContainer" unique_id=83006901]
+offset_right = 161.0
+offset_bottom = 61.0
+theme_override_styles/panel = ExtResource("1_56boy")
+script = SubResource("GDScript_wpmbh")
+groupbutton = ExtResource("1_0pkd4")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=325588197]
+layout_mode = 2
+
+[node name="ButtonTitle" type="Button" parent="VBoxContainer" unique_id=22333927]
+layout_mode = 2
+toggle_mode = true
+text = "TITLE_BASE_OPTION"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=471867442]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=591227511]
+layout_mode = 2
+
+[node name="HSeparator" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1521982171]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="previous" type="TextureButton" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1198121462]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture_normal = ExtResource("2_75a12")
+texture_hover = ExtResource("3_75a12")
+stretch_mode = 0
+
+[node name="option" type="OptionButton" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1123826864]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="next" type="TextureButton" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=234267805]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture_normal = ExtResource("2_75a12")
+texture_hover = ExtResource("3_75a12")
+stretch_mode = 0
+flip_h = true
+
+[node name="HSeparator2" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1676961835]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[connection signal="toggled" from="VBoxContainer/ButtonTitle" to="." method="_on_button_title_toggled"]

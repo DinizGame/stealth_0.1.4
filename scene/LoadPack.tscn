@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://betrd5rbgkmeu"]
+
+[ext_resource type="Script" uid="uid://c6c05iusf0ira" path="res://UI_ASSETS/script/load_pack.gd" id="1_76rac"]
+
+[node name="LoadPack" type="Control" unique_id=1237495722]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_76rac")
+proxima_cena = "uid://bs4h1ft68fxl3"
+caminho_obrigatorios_editor = "C:\\Users\\CASA\\Documents\\game_server_local\\Assets\\Packs"
+packs_obrigatorios = Array[String](["P1.pck"])
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=1925339191]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer" unique_id=651319180]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="AspectRatioContainer/VBoxContainer" unique_id=810917381]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator3" type="HSeparator" parent="AspectRatioContainer/VBoxContainer" unique_id=161872306]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LoadProgress" type="VBoxContainer" parent="AspectRatioContainer/VBoxContainer" unique_id=142272868]
+layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="AspectRatioContainer/VBoxContainer/LoadProgress" unique_id=309169647]
+layout_mode = 2
+
+[node name="LabelInfor" type="Label" parent="AspectRatioContainer/VBoxContainer/LoadProgress" unique_id=114595526]
+layout_mode = 2
+text = "Progress Infor"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="AspectRatioContainer/VBoxContainer" unique_id=991823009]
+layout_mode = 2
+theme_override_constants/separation = 25

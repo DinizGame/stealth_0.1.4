@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://d0jlyav3pn1ty"]
+
+[ext_resource type="StyleBox" uid="uid://cyqhpcpbthvm2" path="res://UI_ASSETS/themes/panel_expan_select.tres" id="1_2bntw"]
+[ext_resource type="ButtonGroup" uid="uid://br3tmjod6460w" path="res://UI_ASSETS/grupos/list_edit_character.tres" id="1_etgoc"]
+
+[sub_resource type="GDScript" id="GDScript_wpmbh"]
+resource_name = "BaseScroll"
+script/source = "extends PanelContainer
+
+@export var groupbutton: ButtonGroup
+@export var valor: float = 0.0
+@export var valor_minimo: float = 0.0
+@export var valor_maximo: float = 1.0
+@export var incremento: float = 0.01
+
+@onready var button_title: Button = $VBoxContainer/ButtonTitle
+@onready var v_box_container: VBoxContainer = $VBoxContainer/VBoxContainer
+@onready var slider: HSlider = $VBoxContainer/VBoxContainer/HBoxContainer/scroll
+
+var shader_material: ShaderMaterial
+var shader_parameter: StringName
+
+
+func _ready() -> void:
+	slider.min_value = valor_minimo
+	slider.max_value = valor_maximo
+	slider.step = incremento
+
+	if not slider.value_changed.is_connected(_on_value_changed):
+		slider.value_changed.connect(_on_value_changed)
+
+
+func configurar(data: Dictionary) -> void:
+	button_title.text = str(data.get(\"nome\", \"Valor\"))
+	shader_material = data.get(\"material\") as ShaderMaterial
+	shader_parameter = StringName(data.get(\"shader_parameter\", &\"\"))
+
+	valor_minimo = float(data.get(\"min\", valor_minimo))
+	valor_maximo = float(data.get(\"max\", valor_maximo))
+	incremento = float(data.get(\"step\", incremento))
+
+	slider.min_value = valor_minimo
+	slider.max_value = valor_maximo
+	slider.step = incremento
+
+	var current_value: Variant = data.get(\"valor\", valor)
+
+	if typeof(current_value) == TYPE_FLOAT or typeof(current_value) == TYPE_INT:
+		valor = clampf(float(current_value), valor_minimo, valor_maximo)
+
+	slider.set_value_no_signal(valor)
+
+
+func definir_grupo_select(grupo: ButtonGroup) -> void:
+	groupbutton = grupo
+	button_title.toggle_mode = true
+	button_title.button_group = grupo
+
+
+func _on_button_title_toggled(toggled_on: bool) -> void:
+	v_box_container.visible = toggled_on
+
+
+func _on_value_changed(new_value: float) -> void:
+	valor = new_value
+
+	if shader_material == null or shader_parameter.is_empty():
+		return
+
+	shader_material.set_shader_parameter(shader_parameter, valor)
+"
+
+[node name="base_scroll" type="PanelContainer" unique_id=83006901]
+offset_right = 161.0
+offset_bottom = 30.0
+theme_override_styles/panel = ExtResource("1_2bntw")
+script = SubResource("GDScript_wpmbh")
+groupbutton = ExtResource("1_etgoc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=325588197]
+layout_mode = 2
+
+[node name="ButtonTitle" type="Button" parent="VBoxContainer" unique_id=22333927]
+layout_mode = 2
+toggle_mode = true
+text = "TITLE_BASE_SCROLL"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=2065956334]
+visible = false
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=565915704]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=57355801]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1850883727]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="scroll" type="HSlider" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2022682592]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=485781846]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=453281356]
+layout_mode = 2
+
+[connection signal="toggled" from="VBoxContainer/ButtonTitle" to="." method="_on_button_title_toggled"]

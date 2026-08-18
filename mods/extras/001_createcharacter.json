@@ -1,0 +1,6 @@
+{
+	"id": "createcharacter",
+	"title": "TITLE_CREATE_CHARACTER",
+	"help": "HELP_CREATE_CHARACTER",
+	"next_scene": "res://scene/create_character.tscn"
+}

@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://c3vj0w173ettv"]
+
+[ext_resource type="PackedScene" uid="uid://bs4h1ft68fxl3" path="res://UI_ASSETS/cenas/menu_inicial.tscn" id="1_wl33h"]
+[ext_resource type="PackedScene" uid="uid://bikmg0lf8fksf" path="res://UI_ASSETS/cenas/btn_return.tscn" id="2_c300y"]
+
+[sub_resource type="GDScript" id="GDScript_1obs7"]
+resource_name = "mod_base"
+script/source = "extends Control
+
+@export var scene_path:PackedScene
+
+func _on_btn_return_pressed() -> void:
+	get_tree().change_scene_to_packed(scene_path)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c300y"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[node name="ModExtraBase" type="Control" unique_id=726306091]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_1obs7")
+scene_path = ExtResource("1_wl33h")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=47344342]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+
+[node name="AspectRatioContainer" type="Panel" parent="." unique_id=515998354]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = -210.0
+offset_right = 205.0
+offset_bottom = 234.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c300y")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer" unique_id=757016520]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="AspectRatioContainer/VBoxContainer" unique_id=185215517]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "TITLE_MOD_BASE"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="AspectRatioContainer/VBoxContainer" unique_id=765864203]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 3
+text = "HELP_MOD_BASE"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="AspectRatioContainer/VBoxContainer" unique_id=1235663549]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BTN_RETURN" parent="AspectRatioContainer/VBoxContainer" unique_id=1199768495 instance=ExtResource("2_c300y")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[connection signal="pressed" from="AspectRatioContainer/VBoxContainer/BTN_RETURN" to="." method="_on_btn_return_pressed"]

@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://drnmp088rd1fu"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_body"]
+albedo_color = Color(0.72, 0.68, 0.34, 1)
+roughness = 0.62
+
+[sub_resource type="BoxMesh" id="Mesh_body"]
+material = SubResource("Mat_body")
+size = Vector3(0.48, 0.3, 0.68)
+
+[sub_resource type="StandardMaterial3D" id="Mat_dark"]
+albedo_color = Color(0.055, 0.045, 0.025, 1)
+roughness = 0.44
+
+[sub_resource type="CylinderMesh" id="Mesh_lens"]
+material = SubResource("Mat_dark")
+top_radius = 0.13
+bottom_radius = 0.17
+height = 0.24
+
+[sub_resource type="BoxMesh" id="Mesh_hood"]
+material = SubResource("Mat_dark")
+size = Vector3(0.54, 0.08, 0.4)
+
+[node name="CameraVisual" type="Node3D" unique_id=551926058]
+
+[node name="CameraHead" type="Node3D" parent="." unique_id=318332149]
+transform = Transform3D(1, 0, 0, 0, 0.99025667, 0.1392541, 0, -0.1392541, 0.99025667, 0, 0, 0)
+
+[node name="Body" type="MeshInstance3D" parent="CameraHead" unique_id=83130548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, -0.25)
+mesh = SubResource("Mesh_body")
+
+[node name="Lens" type="MeshInstance3D" parent="CameraHead" unique_id=1724893368]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -0.02, -0.68)
+mesh = SubResource("Mesh_lens")
+
+[node name="Hood" type="MeshInstance3D" parent="CameraHead" unique_id=791370079]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, -0.42)
+mesh = SubResource("Mesh_hood")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="CameraHead" unique_id=1185783913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.025381483, -0.8388255)
+light_color = Color(1, 0, 0, 1)
+light_specular = 16.0
+shadow_enabled = true
+spot_range = 16.243359
+spot_angle = 33.87672

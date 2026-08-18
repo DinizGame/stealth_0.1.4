@@ -1,0 +1,21 @@
+[gd_resource type="Theme" format=3 uid="uid://ctthkfyife0sk"]
+
+[ext_resource type="StyleBox" uid="uid://ciuudtssplh0o" path="res://UI_ASSETS/themes/btn_focu.tres" id="1_lfn6w"]
+[ext_resource type="StyleBox" uid="uid://cq1e1vxw8i0iq" path="res://UI_ASSETS/themes/btn_hover.tres" id="2_vbx4w"]
+[ext_resource type="StyleBox" uid="uid://u38wadvufg7s" path="res://UI_ASSETS/themes/btn_normal.tres" id="3_lfn6w"]
+[ext_resource type="StyleBox" uid="uid://cp3xl3yc38acx" path="res://UI_ASSETS/themes/btn_pressed.tres" id="4_07wn1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m7cse"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kg1xk"]
+
+[resource]
+Button/constants/icon_max_width = 25
+Button/styles/focus = ExtResource("1_lfn6w")
+Button/styles/hover = ExtResource("2_vbx4w")
+Button/styles/normal = ExtResource("3_lfn6w")
+Button/styles/pressed = ExtResource("4_07wn1")
+HSeparator/styles/separator = SubResource("StyleBoxEmpty_m7cse")
+PopupMenu/constants/icon_max_width = 32
+VBoxContainer/constants/separation = 12
+VSeparator/styles/separator = SubResource("StyleBoxEmpty_kg1xk")

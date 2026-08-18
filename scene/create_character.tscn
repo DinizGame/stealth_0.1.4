@@ -1,0 +1,1007 @@
+[gd_scene format=3 uid="uid://bt3b1g3xwf2my"]
+
+[ext_resource type="PackedScene" uid="uid://bs4h1ft68fxl3" path="res://UI_ASSETS/cenas/menu_inicial.tscn" id="1_em00p"]
+[ext_resource type="Material" uid="uid://2vrw3dke1jas" path="res://assets/player/material/BaseBodyColor.material" id="2_lb4b5"]
+[ext_resource type="PackedScene" uid="uid://dcucxv00b16rq" path="res://assets/player/meshs/body_player.scn" id="3_h4f5v"]
+[ext_resource type="Material" uid="uid://rpyje4fql46p" path="res://assets/player/material/BaseBodyRoughness.material" id="3_obo0a"]
+[ext_resource type="Script" uid="uid://dv3h8aqote0tl" path="res://UI_ASSETS/script/panel_edicao.gd" id="4_a76cq"]
+[ext_resource type="Texture2D" uid="uid://b4k8jc7s88lvq" path="res://UI_ASSETS/icon/zoom_in.png" id="4_kclcf"]
+[ext_resource type="PackedScene" uid="uid://d0jlyav3pn1ty" path="res://UI_ASSETS/cenas/base_scroll.tscn" id="5_admcv"]
+[ext_resource type="Texture2D" uid="uid://dpydbrglq1k0t" path="res://UI_ASSETS/icon/exitLeft.png" id="5_ny8m1"]
+[ext_resource type="Texture2D" uid="uid://ctwkqnjku6h5e" path="res://UI_ASSETS/icon/resize_c_vertical.png" id="5_t4l7u"]
+[ext_resource type="PackedScene" uid="uid://bikmg0lf8fksf" path="res://UI_ASSETS/cenas/btn_return.tscn" id="5_up41x"]
+[ext_resource type="PackedScene" uid="uid://qqs57asvs7g1" path="res://UI_ASSETS/cenas/base_option.tscn" id="6_h4f5v"]
+[ext_resource type="PackedScene" uid="uid://c8vmfubnc8281" path="res://UI_ASSETS/cenas/base_color.tscn" id="7_3icin"]
+[ext_resource type="Texture2D" uid="uid://hfvkv8g3ylgo" path="res://UI_ASSETS/icon/zoom_out.png" id="7_t4l7u"]
+[ext_resource type="Texture2D" uid="uid://b48um3esk3frk" path="res://UI_ASSETS/icon/exitLeft_red.png" id="8_lb4b5"]
+[ext_resource type="Texture2D" uid="uid://npx7ysdirv5x" path="res://UI_ASSETS/icon/zoom_in_red.png" id="9_84fgs"]
+[ext_resource type="Texture2D" uid="uid://cikest5jqa43x" path="res://UI_ASSETS/icon/pawn_skip.png" id="10_1wh4f"]
+[ext_resource type="Texture2D" uid="uid://dqq4i2hm4fs86" path="res://UI_ASSETS/icon/zoom_out_red.png" id="11_84kg0"]
+[ext_resource type="Texture2D" uid="uid://bfptg46kdqx8p" path="res://UI_ASSETS/icon/resize_c_vertical_red.png" id="13_3iars"]
+[ext_resource type="Texture2D" uid="uid://cyk4j7n7drd41" path="res://UI_ASSETS/icon/resize_c_horizontal_red.png" id="15_88wco"]
+[ext_resource type="PackedScene" uid="uid://derg5aayocjki" path="res://UI_ASSETS/cenas/aba_shader_base.tscn" id="21_obo0a"]
+[ext_resource type="PackedScene" uid="uid://bbeyywq8qcn0n" path="res://UI_ASSETS/cenas/base_bool.tscn" id="21_up41x"]
+[ext_resource type="Texture2D" uid="uid://dbxxvqj2woivh" path="res://UI_ASSETS/icon/cloth.png" id="22_84kg0"]
+[ext_resource type="PackedScene" uid="uid://10kh3868r57t" path="res://UI_ASSETS/cenas/base_save.tscn" id="23_gvk7j"]
+[ext_resource type="Texture2D" uid="uid://6otr26p23p7u" path="res://UI_ASSETS/icon/palette_color.png" id="24_88wco"]
+[ext_resource type="Texture2D" uid="uid://bvsyh2incrh2x" path="res://UI_ASSETS/icon/shaper2.png" id="25_84fgs"]
+
+[sub_resource type="GDScript" id="GDScript_jhet3"]
+resource_name = "CreateCharacter"
+script/source = "extends Control
+
+@export var scene_path: PackedScene
+@onready var panel_edicao = %PanelEdicao
+
+func _ready() -> void:
+	panel_edicao.hide()
+
+
+func _on_check_button_toggled(toggled_on: bool) -> void:
+	panel_edicao.visible = toggled_on
+	%CheckButton.flip_h = toggled_on
+
+
+func _on_btn_return_pressed() -> void:
+	if await panel_edicao.solicitar_saida():
+		get_tree().change_scene_to_packed(scene_path)
+"
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_obo0a"]
+
+[sub_resource type="Shader" id="Shader_op1xm"]
+code = "/*
+	動的電子背景シェーダー by あるる（きのもと 結衣） @arlez80
+	Procedural Electric Background Shader by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+shader_type canvas_item;
+
+uniform vec4 background_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 line_color : source_color = vec4(0.0, 1.0, 1.0, 1.0);
+uniform float line_freq = 9.56;
+uniform float height = 0.6;
+uniform float speed = 0.8;
+uniform vec2 scale = vec2( 2.0, 16.0 );
+
+void fragment( )
+{
+	vec2 uv = UV * scale;
+	float shift = cos( floor( uv.y ) );
+	uv.x += shift;
+
+	float freq = clamp( cos( uv.x * line_freq ) * 3.0, 0.0, 1.0 ) * height;
+	float line = 1.0 - clamp( abs( freq - mod( uv.y, 1.0 ) ) * 11.0, 0.0, 1.0 );
+
+	COLOR = mix( background_color, line_color, line * mod( uv.x - TIME * speed * abs( shift ), 1.0 ) /*  * mod( TIME + shift, 1.0 ) */ );
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tsy18"]
+shader = SubResource("Shader_op1xm")
+shader_parameter/background_color = Color(0, 0, 0, 0.5647059)
+shader_parameter/line_color = Color(0, 1, 1, 1)
+shader_parameter/line_freq = 9.56
+shader_parameter/height = 0.6
+shader_parameter/speed = 0.2
+shader_parameter/scale = Vector2(7.5, 30)
+
+[sub_resource type="Shader" id="Shader_84fgs"]
+code = "/*
+	動的電子背景シェーダー by あるる（きのもと 結衣） @arlez80
+	Procedural Electric Background Shader by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+shader_type canvas_item;
+
+uniform vec4 background_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 line_color : source_color = vec4(0.0, 1.0, 1.0, 1.0);
+uniform float line_freq = 9.56;
+uniform float height = 0.6;
+uniform float speed = 0.8;
+uniform vec2 scale = vec2( 2.0, 16.0 );
+
+void fragment( )
+{
+	vec2 uv = UV * scale;
+	float shift = cos( floor( uv.y ) );
+	uv.x += shift;
+
+	float freq = clamp( cos( uv.x * line_freq ) * 3.0, 0.0, 1.0 ) * height;
+	float line = 1.0 - clamp( abs( freq - mod( uv.y, 1.0 ) ) * 11.0, 0.0, 1.0 );
+
+	COLOR = mix( background_color, line_color, line * mod( uv.x - TIME * speed * abs( shift ), 1.0 ) /*  * mod( TIME + shift, 1.0 ) */ );
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_88wco"]
+shader = SubResource("Shader_84fgs")
+shader_parameter/background_color = Color(0, 0, 0, 0)
+shader_parameter/line_color = Color(0, 1, 1, 1)
+shader_parameter/line_freq = 9.56
+shader_parameter/height = 0.6
+shader_parameter/speed = 0.8
+shader_parameter/scale = Vector2(2, 16)
+
+[sub_resource type="GDScript" id="GDScript_tg4hv"]
+resource_name = "ControleCamera"
+script/source = "extends SubViewportContainer
+
+
+@onready var camera_3d: Camera3D = $SubViewport/Camera3D
+@onready var player: Node3D = %MarkPlayer
+
+
+@export_group(\"3D References\")
+## Alvo para o qual a câmera permanecerá olhando.
+## Arraste o nó MarkerPan para este campo no Inspector.
+@export var pan_target: Marker3D
+
+
+@export_group(\"UI References\")
+@export var scroll_horizontal: HSlider
+@export var scroll_vertical: VSlider
+
+
+@export_group(\"Camera Settings\")
+## Sensibilidade do pan vertical pelo mouse.
+@export var pan_speed: float = 0.005
+
+## Limites locais do MarkerPan no eixo Y.
+@export var min_pan_y: float = 0.0
+@export var max_pan_y: float = 1.5
+
+
+@export_group(\"Zoom Settings\")
+## Zoom realizado pela roda do mouse.
+@export var zoom_step: float = 0.2
+
+## Velocidade do zoom contínuo pelos botões.
+@export var zoom_speed: float = 1.5
+
+@export var min_zoom: float = 0.3
+@export var max_zoom: float = 3.0
+
+
+@export_group(\"Player Settings\")
+## Sensibilidade da rotação horizontal pelo mouse.
+@export var player_rotation_speed: float = 0.005
+
+## Velocidade máxima da rotação controlada pelo slider horizontal.
+## Medida em radianos por segundo.
+@export var max_ui_rotation_speed: float = 3.0
+
+
+var _zoom_direction: float = 0.0
+var _ui_rotation_tween: Tween
+
+
+func _ready() -> void:
+	if not is_instance_valid(pan_target):
+		push_error(
+			\"ControleCamera: atribua o nó MarkerPan ao campo 'pan_target' no Inspector.\"
+		)
+	else:
+		# Garante que o alvo comece dentro dos limites configurados.
+		_set_pan_y(pan_target.position.y, false)
+		_update_camera_look()
+
+	_configurar_slider_horizontal()
+	_configurar_slider_vertical()
+
+
+func _process(delta: float) -> void:
+	_processar_rotacao_continua(delta)
+	_processar_zoom_continuo(delta)
+
+	# Mantém a câmera olhando para o MarkerPan o tempo todo.
+	_update_camera_look()
+
+
+func _input(event: InputEvent) -> void:
+	_processar_zoom_mouse(event)
+	_processar_movimento_mouse(event)
+
+
+# ---------------------------------------------------------------------------
+# CONFIGURAÇÃO DA INTERFACE
+# ---------------------------------------------------------------------------
+
+func _configurar_slider_horizontal() -> void:
+	if not is_instance_valid(scroll_horizontal):
+		return
+
+	scroll_horizontal.min_value = 0.0
+	scroll_horizontal.max_value = 100.0
+	scroll_horizontal.step = 0.01
+	scroll_horizontal.value = 50.0
+
+	if not scroll_horizontal.drag_started.is_connected(
+		_on_horizontal_drag_started
+	):
+		scroll_horizontal.drag_started.connect(
+			_on_horizontal_drag_started
+		)
+
+	if not scroll_horizontal.drag_ended.is_connected(
+		_on_horizontal_drag_ended
+	):
+		scroll_horizontal.drag_ended.connect(
+			_on_horizontal_drag_ended
+		)
+
+
+func _configurar_slider_vertical() -> void:
+	if not is_instance_valid(scroll_vertical):
+		return
+
+	scroll_vertical.min_value = 0.0
+	scroll_vertical.max_value = 100.0
+	scroll_vertical.step = 0.01
+
+	if not scroll_vertical.value_changed.is_connected(
+		_on_pan_vertical_value_changed
+	):
+		scroll_vertical.value_changed.connect(
+			_on_pan_vertical_value_changed
+		)
+
+	_sync_vertical_slider()
+
+
+# ---------------------------------------------------------------------------
+# CONTROLE DA CÂMERA
+# ---------------------------------------------------------------------------
+
+func _update_camera_look() -> void:
+	if not is_instance_valid(camera_3d):
+		return
+
+	if not is_instance_valid(pan_target):
+		return
+
+	var camera_position: Vector3 = camera_3d.global_position
+	var target_position: Vector3 = pan_target.global_position
+	var direction: Vector3 = target_position - camera_position
+
+	# look_at() não pode receber a própria posição da câmera como alvo.
+	if direction.length_squared() <= 0.000001:
+		return
+
+	# Também evita o caso em que a direção fica totalmente paralela
+	# ao vetor vertical, o que deixaria a rotação indefinida.
+	var normalized_direction: Vector3 = direction.normalized()
+
+	if absf(normalized_direction.dot(Vector3.UP)) >= 0.9999:
+		return
+
+	camera_3d.look_at(target_position, Vector3.UP)
+
+
+func _set_pan_y(new_y: float, synchronize_slider: bool = true) -> void:
+	if not is_instance_valid(pan_target):
+		return
+
+	var target_position: Vector3 = pan_target.position
+
+	target_position.y = clampf(
+		new_y,
+		min_pan_y,
+		max_pan_y
+	)
+
+	pan_target.position = target_position
+
+	_update_camera_look()
+
+	if synchronize_slider:
+		_sync_vertical_slider()
+
+
+func _sync_vertical_slider() -> void:
+	if not is_instance_valid(scroll_vertical):
+		return
+
+	if not is_instance_valid(pan_target):
+		return
+
+	var pan_range: float = max_pan_y - min_pan_y
+	var percent: float = 0.0
+
+	if not is_zero_approx(pan_range):
+		percent = inverse_lerp(
+			min_pan_y,
+			max_pan_y,
+			pan_target.position.y
+		)
+
+	percent = clampf(percent, 0.0, 1.0)
+
+	scroll_vertical.set_value_no_signal(percent * 100.0)
+
+
+# ---------------------------------------------------------------------------
+# PROCESSAMENTO CONTÍNUO
+# ---------------------------------------------------------------------------
+
+func _processar_rotacao_continua(delta: float) -> void:
+	if not is_instance_valid(scroll_horizontal):
+		return
+
+	if not is_instance_valid(player):
+		return
+
+	if is_equal_approx(scroll_horizontal.value, 50.0):
+		return
+
+	var rotation_axis: float = (
+		(scroll_horizontal.value - 50.0) / 50.0
+	)
+
+	player.rotate_y(
+		rotation_axis
+		* max_ui_rotation_speed
+		* delta
+	)
+
+
+func _processar_zoom_continuo(delta: float) -> void:
+	if is_zero_approx(_zoom_direction):
+		return
+
+	camera_3d.size = clampf(
+		camera_3d.size
+		+ _zoom_direction
+		* zoom_speed
+		* delta,
+		min_zoom,
+		max_zoom
+	)
+
+
+# ---------------------------------------------------------------------------
+# CONTROLE PELO MOUSE
+# ---------------------------------------------------------------------------
+
+func _processar_zoom_mouse(event: InputEvent) -> void:
+	if event is not InputEventMouseButton:
+		return
+
+	var mouse_event: InputEventMouseButton = event
+
+	if mouse_event.button_index == MOUSE_BUTTON_WHEEL_UP:
+		if mouse_event.pressed:
+			camera_3d.size = clampf(
+				camera_3d.size - zoom_step,
+				min_zoom,
+				max_zoom
+			)
+
+	elif mouse_event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		if mouse_event.pressed:
+			camera_3d.size = clampf(
+				camera_3d.size + zoom_step,
+				min_zoom,
+				max_zoom
+			)
+
+	elif mouse_event.button_index == MOUSE_BUTTON_MIDDLE:
+		if mouse_event.pressed:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _processar_movimento_mouse(event: InputEvent) -> void:
+	if event is not InputEventMouseMotion:
+		return
+
+	if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	var mouse_motion: InputEventMouseMotion = event
+
+	# Movimento vertical:
+	# agora move o MarkerPan, não a câmera.
+	if is_instance_valid(pan_target):
+		var dynamic_sensitivity: float = (
+			pan_speed * camera_3d.size
+		)
+
+		var new_pan_y: float = (
+			pan_target.position.y
+			- mouse_motion.relative.y
+			* dynamic_sensitivity
+		)
+
+		_set_pan_y(new_pan_y)
+
+	# Movimento horizontal:
+	# continua rotacionando o MarkPlayer normalmente.
+	if is_instance_valid(player):
+		player.rotate_y(
+			-mouse_motion.relative.x
+			* player_rotation_speed
+		)
+
+
+# ---------------------------------------------------------------------------
+# SLIDER VERTICAL
+# ---------------------------------------------------------------------------
+
+func _on_pan_vertical_value_changed(value: float) -> void:
+	var percent: float = clampf(
+		value / 100.0,
+		0.0,
+		1.0
+	)
+
+	var target_y: float = lerp(
+		min_pan_y,
+		max_pan_y,
+		percent
+	)
+
+	_set_pan_y(target_y, false)
+
+
+# ---------------------------------------------------------------------------
+# SLIDER HORIZONTAL
+# ---------------------------------------------------------------------------
+
+func _on_horizontal_drag_started() -> void:
+	if (
+		_ui_rotation_tween != null
+		and _ui_rotation_tween.is_valid()
+	):
+		_ui_rotation_tween.kill()
+
+
+func _on_horizontal_drag_ended(
+	_value_changed: bool
+) -> void:
+	if not is_instance_valid(scroll_horizontal):
+		return
+
+	_ui_rotation_tween = create_tween()
+
+	_ui_rotation_tween.tween_property(
+		scroll_horizontal,
+		\"value\",
+		50.0,
+		0.2
+	).set_trans(
+		Tween.TRANS_CUBIC
+	).set_ease(
+		Tween.EASE_OUT
+	)
+
+
+# ---------------------------------------------------------------------------
+# BOTÕES DE ZOOM
+# ---------------------------------------------------------------------------
+
+func _on_zoom_down_button_down() -> void:
+	# Aumentar o size afasta o enquadramento.
+	_zoom_direction = 1.0
+
+
+func _on_zoom_down_button_up() -> void:
+	if _zoom_direction > 0.0:
+		_zoom_direction = 0.0
+
+
+func _on_zoom_up_button_down() -> void:
+	# Diminuir o size aproxima o enquadramento.
+	_zoom_direction = -1.0
+
+
+func _on_zoom_up_button_up() -> void:
+	if _zoom_direction < 0.0:
+		_zoom_direction = 0.0
+"
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tsy18"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 1.6083606
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_84kg0"]
+albedo_color = Color(0, 1, 1, 1)
+roughness = 0.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h4f5v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3icin"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rvvxj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pe0dl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_snlk8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eny4p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_op1xm"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.07058824, 0.12941177, 0.2509804, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 9.0
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddn70"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.07058824, 0.12941177, 0.2509804, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 9.0
+expand_margin_top = 4.0
+expand_margin_right = 5.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_88wco"]
+content_margin_top = 0.0
+content_margin_right = 2.0
+content_margin_bottom = 0.0
+bg_color = Color(0.07058824, 0.12941177, 0.2509804, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 4.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ddn70"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_84fgs"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.07058824, 0.12941177, 0.2509804, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 5.0
+expand_margin_top = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_op1xm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3iars"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 0.7490196)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+corner_detail = 1
+
+[node name="CreateCharacter" type="Control" unique_id=523563760]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_jhet3")
+scene_path = ExtResource("1_em00p")
+
+[node name="BakeSkinBody" type="SubViewport" parent="." unique_id=535466083]
+unique_name_in_owner = true
+
+[node name="SkinTemp" type="TextureRect" parent="BakeSkinBody" unique_id=1663724172]
+material = ExtResource("2_lb4b5")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_obo0a")
+
+[node name="BakeSkinRoughness" type="SubViewport" parent="." unique_id=1694661998]
+unique_name_in_owner = true
+
+[node name="RoughnessTemp" type="TextureRect" parent="BakeSkinRoughness" unique_id=2009457364]
+material = ExtResource("3_obo0a")
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_obo0a")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1348877422]
+material = SubResource("ShaderMaterial_tsy18")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=1963534586]
+material = SubResource("ShaderMaterial_88wco")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=274911821]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1182672638]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1162616191]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="Control" parent="VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1234245125]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=1613534925 node_paths=PackedStringArray("pan_target", "scroll_horizontal", "scroll_vertical")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+script = SubResource("GDScript_tg4hv")
+pan_target = NodePath("SubViewport/MarkerPan")
+scroll_horizontal = NodePath("../VBoxContainer/HBoxContainer3/RotationHorizontal")
+scroll_vertical = NodePath("../VBoxContainer/HBoxContainer/PanVertical")
+max_pan_y = 1.4
+max_zoom = 2.0
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" unique_id=314886400]
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 3
+screen_space_aa = 1
+size = Vector2i(850, 720)
+render_target_update_mode = 4
+
+[node name="MarkPlayer" type="Node3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=308636344]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="body" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/MarkPlayer" unique_id=1638823709 instance=ExtResource("3_h4f5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport/MarkPlayer" unique_id=543777043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8235478, 0)
+mesh = SubResource("CylinderMesh_tsy18")
+surface_material_override/0 = SubResource("StandardMaterial3D_84kg0")
+
+[node name="Camera3D" type="Camera3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=1613898092]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14635527, 0.8526168, 1.4590116)
+projection = 1
+size = 1.8910042
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=813239754]
+transform = Transform3D(0.9305529, 0, -0.3661576, 0.12464493, 0.9402759, 0.31677264, 0.34428918, -0.34041342, 0.8749765, -1.2575452, 1.1600239, 2.7855701)
+light_energy = 1.3
+shadow_enabled = true
+directional_shadow_pancake_size = 0.0
+
+[node name="MarkerPan" type="Marker3D" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer/SubViewport" unique_id=1447743619]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=755831364]
+layout_mode = 0
+offset_top = 627.0
+offset_right = 850.0
+offset_bottom = 639.0
+theme_override_constants/separation = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer" unique_id=201246103]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1152266799]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=679697420]
+layout_mode = 2
+
+[node name="BTN_RETURN" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1199768495 instance=ExtResource("5_up41x")]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1121020737]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1996647410]
+layout_mode = 2
+
+[node name="BodySelect" type="OptionButton" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=121930597]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=181053493]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=639071016]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckButton" type="TextureButton" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1448655493]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 0
+toggle_mode = true
+texture_normal = ExtResource("5_ny8m1")
+texture_hover = ExtResource("8_lb4b5")
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1580299776]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=977267253]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1586855074]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1426731471]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=684537656]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="zoomUP" type="TextureButton" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=2098739591]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture_normal = ExtResource("4_kclcf")
+texture_pressed = ExtResource("9_84fgs")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="HSeparator3" type="Label" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1610366581]
+layout_mode = 2
+text = "Zoom"
+horizontal_alignment = 1
+
+[node name="zoomDOWN" type="TextureButton" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1304257307]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture_normal = ExtResource("7_t4l7u")
+texture_pressed = ExtResource("11_84kg0")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=597796823]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=651263574]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanVertical" type="VSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1442065376]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("5_t4l7u")
+theme_override_icons/grabber_highlight = ExtResource("13_3iars")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h4f5v")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_3icin")
+value = 50.0
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1199877249]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1101553109]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=847472892]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="RotationHorizontal" type="HSlider" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=1634856410]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_icons/grabber = ExtResource("10_1wh4f")
+theme_override_icons/grabber_highlight = ExtResource("15_88wco")
+theme_override_styles/slider = SubResource("StyleBoxEmpty_rvvxj")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_pe0dl")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_snlk8")
+value = 50.0
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3" unique_id=2114063128]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=825265195]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="PanelEdicao" type="PanelContainer" parent="VBoxContainer/HBoxContainer2" unique_id=1683097984]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(426, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_eny4p")
+script = ExtResource("4_a76cq")
+base_scroll = ExtResource("5_admcv")
+base_option = ExtResource("6_h4f5v")
+base_color = ExtResource("7_3icin")
+base_bool = ExtResource("21_up41x")
+aba_shader_base = ExtResource("21_obo0a")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao" unique_id=1788240842]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2" unique_id=708649233]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="base_save" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2" unique_id=83006901 instance=ExtResource("23_gvk7j")]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2" unique_id=1228037692]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer" unique_id=94246681]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/VBoxContainer" unique_id=211589695]
+layout_mode = 2
+
+[node name="cloth" type="Button" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/VBoxContainer" unique_id=671058751]
+z_index = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/icon_max_width = 55
+theme_override_styles/normal = SubResource("StyleBoxFlat_op1xm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ddn70")
+theme_override_styles/hover = SubResource("StyleBoxFlat_88wco")
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_ddn70")
+icon = ExtResource("22_84kg0")
+expand_icon = true
+
+[node name="shaper" type="Button" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/VBoxContainer" unique_id=1859157537]
+z_index = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/icon_max_width = 55
+theme_override_styles/normal = SubResource("StyleBoxFlat_op1xm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ddn70")
+theme_override_styles/hover = SubResource("StyleBoxFlat_88wco")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ddn70")
+icon = ExtResource("24_88wco")
+expand_icon = true
+
+[node name="color" type="Button" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/VBoxContainer" unique_id=448159457]
+z_index = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/icon_max_width = 55
+theme_override_styles/normal = SubResource("StyleBoxFlat_op1xm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ddn70")
+theme_override_styles/hover = SubResource("StyleBoxFlat_88wco")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ddn70")
+icon = ExtResource("25_84fgs")
+expand_icon = true
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer" unique_id=2099193818]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_84fgs")
+current_tab = 0
+tabs_visible = false
+
+[node name="ClothTab" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer" unique_id=407346756]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="TitleTab" type="Label" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ClothTab" unique_id=1056483461]
+layout_mode = 2
+text = "TITLE_CHOTH"
+horizontal_alignment = 1
+
+[node name="ClothCuston" type="TabContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ClothTab" unique_id=867851872]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_op1xm")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_3iars")
+tab_alignment = 1
+
+[node name="ColorTab" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer" unique_id=1283938282]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="TitleTab" type="Label" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ColorTab" unique_id=403108255]
+layout_mode = 2
+text = "TITLE_COLOR"
+horizontal_alignment = 1
+
+[node name="ShaderCuston" type="TabContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ColorTab" unique_id=1386308610]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_op1xm")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_3iars")
+tab_alignment = 1
+
+[node name="ShaperTab" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer" unique_id=1233189771]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="TitleTab" type="Label" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ShaperTab" unique_id=1011509544]
+layout_mode = 2
+text = "TITLE_SHAPER"
+horizontal_alignment = 1
+
+[node name="ShaperCuston" type="TabContainer" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2/HBoxContainer/TabContainer/ShaperTab" unique_id=1612945129]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_op1xm")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_3iars")
+tab_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/HBoxContainer2/PanelEdicao/VBoxContainer2" unique_id=502703220]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/BTN_RETURN" to="." method="_on_btn_return_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="button_down" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/zoomUP" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_zoom_up_button_down"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/zoomUP" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_zoom_up_button_up"]
+[connection signal="button_down" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/zoomDOWN" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_zoom_down_button_down"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/zoomDOWN" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_zoom_down_button_up"]
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/PanVertical" to="VBoxContainer/HBoxContainer2/VBoxContainer/HBoxContainer/SubViewportContainer" method="_on_pan_vertical_value_changed"]

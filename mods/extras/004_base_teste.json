@@ -1,0 +1,6 @@
+{
+	"id": "modbase",
+	"title": "TITLE_MOD_BASE",
+	"help": "HELP_MOD_BASE",
+	"next_scene": "res://mods/extras/mod_scene/mod_extra_base.tscn"
+}

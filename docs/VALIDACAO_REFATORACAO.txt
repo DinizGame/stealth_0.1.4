@@ -1,0 +1,23 @@
+VALIDAÇÃO ESTÁTICA APROVADA
+
+Projeto: stealth.0.1.1
+Scripts GDScript: 19
+Cenas: 16
+Arquivos JSON: 11
+Referências res:// verificadas: 76
+Membros AutoConfig usados: 26
+
+Verificações aprovadas:
+- JSONs válidos.
+- Delimitadores, strings e indentação básica dos scripts verificados.
+- Referências explícitas res:// e recursos de cenas encontradas.
+- Interface pública do AutoConfig compatível com os usos atuais.
+- Módulos de vídeo, áudio, idioma, inputs, armazenamento e ícones presentes.
+- Fluxo transacional presente no menu.
+- Inputs padrão em PC + JOYPAD, formato v2.
+- Nenhum salvamento automático de input na linha de remapeamento.
+- Nenhuma referência direta a res://.godot/.
+- RB/LB normalizados e correções pontuais verificadas.
+
+Limitação:
+- Esta é uma validação estática. O projeto ainda deve ser aberto e testado no editor Godot no computador do desenvolvedor.

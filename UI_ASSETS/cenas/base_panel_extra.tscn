@@ -1,0 +1,226 @@
+[gd_scene format=3 uid="uid://dgn0yob3qejfc"]
+
+[sub_resource type="GDScript" id="GDScript_i0ni8"]
+resource_name = "PanelExtra"
+script/source = "extends AspectRatioContainer
+
+var ID: String
+var json_title: String
+var json_descricao: String
+var scene_path: String
+var preview_path: String
+var requirements: Dictionary = {}
+
+const RETURN_SCENE_META := &\"extras_return_scene\"
+
+@onready var title: Label = $VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Title
+@onready var help_txt: Label = $VBoxContainer/PanelContainer/VBoxContainer/HSeparator/HelpTXT
+@onready var h_separator: HSeparator = $VBoxContainer/HSeparator
+@onready var h_separator_2: HSeparator = $VBoxContainer/HSeparator2
+
+
+func _ready() -> void:
+	AutoConfig.atualizar_resolution.connect(_ajuste_largura)
+	_ajuste_largura()
+	
+func _ajuste_largura():
+	await get_tree().process_frame
+	
+	var largura_tela := get_viewport_rect().size.x
+	var um_terco_x := largura_tela / 3.0
+	custom_minimum_size.x = um_terco_x
+	
+	await get_tree().process_frame
+
+func configurar(dados: Dictionary) -> void:
+	ID = dados.get(\"id\", \"\")
+	json_title = dados.get(\"title\", \"\")
+	json_descricao = dados.get(\"help\", \"\")
+	scene_path = dados.get(\"next_scene\", \"\")
+	preview_path = dados.get(\"preview\", \"\")
+	requirements = dados.get(\"requires\", {})
+
+	title.text = json_title
+	help_txt.text = json_descricao
+	help_txt.hide()
+
+func _on_painel_selecionado(index_selecionado: int, meu_index: int) -> void:
+	var selecionado := index_selecionado == meu_index
+
+	if selecionado:
+		_receber_foco()
+	else:
+		_perder_foco()
+
+func _receber_foco() -> void:
+	modulate.a = 1.0
+	h_separator.hide()
+	h_separator_2.hide()
+	z_index = 10
+
+	_set_botoes_ativos(true)
+
+
+func _perder_foco() -> void:
+	modulate.a = 0.45
+	h_separator.show()
+	h_separator_2.show()
+	z_index = 0
+	
+	_set_botoes_ativos(false)
+
+func _set_botoes_ativos(ativo: bool) -> void:
+	for child in get_children():
+		_set_botoes_ativos_recursivo(child, ativo)
+
+func _set_botoes_ativos_recursivo(node: Node, ativo: bool) -> void:
+	if node is BaseButton:
+		var button := node as BaseButton
+		button.disabled = not ativo
+
+	for child in node.get_children():
+		_set_botoes_ativos_recursivo(child, ativo)
+
+func _on_help_toggled(toggled_on: bool) -> void:
+	help_txt.visible = toggled_on
+
+
+func _on_play_pressed() -> void:
+	if scene_path == \"\":
+		push_error(\"Nenhuma cena definida para o mod: \" + ID)
+		return
+
+	if not ResourceLoader.exists(scene_path):
+		push_error(\"Cena do mod não encontrada: \" + scene_path)
+		return
+	if not _validar_dependencias():
+		return
+
+	var current_scene := get_tree().current_scene
+	if current_scene and not current_scene.scene_file_path.is_empty():
+		get_tree().set_meta(RETURN_SCENE_META, current_scene.scene_file_path)
+
+	var error := get_tree().change_scene_to_file(scene_path)
+	if error != OK:
+		push_error(\"Erro %d ao abrir o mod '%s'.\" % [error, ID])
+
+func _validar_dependencias() -> bool:
+	var input_actions: Array = requirements.get(\"input_actions\", [])
+	for action in input_actions:
+		var action_name := StringName(str(action))
+		if not InputMap.has_action(action_name):
+			push_error(\"O mod '%s' requer a ação de input '%s'.\" % [ID, action_name])
+			return false
+
+	var autoloads: Array = requirements.get(\"autoloads\", [])
+	for autoload_name in autoloads:
+		if get_node_or_null(\"/root/\" + str(autoload_name)) == null:
+			push_error(\"O mod '%s' requer o Autoload '%s'.\" % [ID, autoload_name])
+			return false
+
+	return true
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_86ls0"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="BasePanelExtra" type="AspectRatioContainer" unique_id=945506951]
+custom_minimum_size = Vector2(500, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_i0ni8")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=619265567]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1013019028]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=1102374344]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_86ls0")
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/PanelContainer" unique_id=597999715]
+layout_mode = 2
+color = Color(0.39688927, 0.39688927, 0.39688924, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1836890011]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=1916781773]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1695991135]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TITLE_PANEL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Help" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Title" unique_id=691203696]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -59.0
+offset_top = -18.0
+offset_bottom = 18.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+toggle_mode = true
+text = "?"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=127910083]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HelpTXT" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer/HSeparator" unique_id=180238220]
+custom_minimum_size = Vector2(494, 423)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Este painel esta destinado a descrever o contueudo da cena que contem dentro desse messmo painel "
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="play" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=2137598287]
+layout_mode = 2
+text = "BTN_ENTRAR_PANEL"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=529525627]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 25
+
+[connection signal="toggled" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Title/Help" to="." method="_on_help_toggled"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/play" to="." method="_on_play_pressed"]

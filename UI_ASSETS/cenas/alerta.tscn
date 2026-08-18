@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://8mt4tcncswbs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_niuol"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.92156863)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="alerta" type="Control" unique_id=1229520546]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=62629962]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_niuol")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=121409976]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/VBoxContainer" unique_id=635390479]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=80531747]
+layout_mode = 2
+
+[node name="cancelar" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=205420491]
+layout_mode = 2
+text = "BTN_CANCELAR"
+
+[node name="confirmar" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1328955041]
+layout_mode = 2
+text = "BTN_CONFIRMAR"

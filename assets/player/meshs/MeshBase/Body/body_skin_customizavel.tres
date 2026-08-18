@@ -1,0 +1,168 @@
+[gd_resource type="Resource" script_class="ItemMeshCustomizavel" format=3 uid="uid://dkvk835o6r7m7"]
+
+[ext_resource type="Script" uid="uid://ct3icyvf2rl2n" path="res://assets/player/customization/resources/item_mesh_customizavel.gd" id="1_item"]
+[ext_resource type="Script" uid="uid://iiqr4fasluja" path="res://assets/player/customization/resources/parametro_shader_editavel.gd" id="2_parameter"]
+[ext_resource type="PackedScene" uid="uid://f3noqqxhu8ae" path="res://assets/player/meshs/MeshBase/Body/body_skin.scn" id="3_scene"]
+
+[sub_resource type="Resource" id="Parameter_color_eye_line"]
+script = ExtResource("2_parameter")
+id = &"eye_line_color"
+titulo = "Cor do delineado"
+aba = &"Corpo"
+shader_parameter = &"ColorEyeLine"
+tipo_controle = 1
+alvo_material = 1
+
+[sub_resource type="Resource" id="Parameter_eye_line"]
+script = ExtResource("2_parameter")
+id = &"eye_line_texture"
+titulo = "Delineado"
+aba = &"Corpo"
+shader_parameter = &"EyeLine"
+tipo_controle = 2
+alvo_material = 1
+pasta_opcoes = "res://assets/player/texture/_eye_line/option/"
+
+[sub_resource type="Resource" id="Parameter_skin_color"]
+script = ExtResource("2_parameter")
+id = &"skin_color"
+titulo = "Cor da pele"
+aba = &"Corpo"
+shader_parameter = &"ColorCuston"
+tipo_controle = 1
+alvo_material = 1
+
+[sub_resource type="Resource" id="Parameter_intimate_color"]
+script = ExtResource("2_parameter")
+id = &"intimate_color"
+titulo = "Cor íntima"
+aba = &"Corpo"
+shader_parameter = &"ColorPussy"
+tipo_controle = 1
+alvo_material = 1
+
+[sub_resource type="Resource" id="Parameter_pubis_color"]
+script = ExtResource("2_parameter")
+id = &"pubis_hair_color"
+titulo = "Cor dos pelos"
+aba = &"Corpo"
+shader_parameter = &"ColorHairPubis"
+tipo_controle = 1
+alvo_material = 1
+
+[sub_resource type="Resource" id="Parameter_pubis_texture"]
+script = ExtResource("2_parameter")
+id = &"pubis_hair_texture"
+titulo = "Pelos"
+aba = &"Corpo"
+shader_parameter = &"HairPubis"
+tipo_controle = 2
+alvo_material = 1
+pasta_opcoes = "res://assets/player/texture/_hair_pubis/"
+
+[sub_resource type="Resource" id="Parameter_vein"]
+script = ExtResource("2_parameter")
+id = &"vein_intensity"
+titulo = "Intensidade das veias"
+aba = &"Corpo"
+shader_parameter = &"FloatVein"
+alvo_material = 1
+valor_maximo = 3.0
+
+[sub_resource type="Resource" id="Parameter_nipples"]
+script = ExtResource("2_parameter")
+id = &"nipples_color"
+titulo = "Cor dos mamilos"
+aba = &"Corpo"
+shader_parameter = &"ColorNipples"
+tipo_controle = 1
+alvo_material = 1
+
+[sub_resource type="Resource" id="Parameter_skin_roughness"]
+script = ExtResource("2_parameter")
+id = &"skin_roughness"
+titulo = "Roughness da pele"
+aba = &"Corpo"
+shader_parameter = &"RoughnessSkin"
+alvo_material = 2
+
+[sub_resource type="Resource" id="Parameter_outfit_texture"]
+script = ExtResource("2_parameter")
+id = &"outfit_texture"
+titulo = "Textura do traje"
+aba = &"Traje"
+shader_parameter = &"CustonTexture"
+tipo_controle = 2
+pasta_opcoes = "res://assets/player/texture/_clothes/traje1/custon/"
+
+[sub_resource type="Resource" id="Parameter_outfit_texture_amount"]
+script = ExtResource("2_parameter")
+id = &"outfit_texture_amount"
+titulo = "Intensidade da textura"
+aba = &"Traje"
+shader_parameter = &"CustonRange"
+
+[sub_resource type="Resource" id="Parameter_outfit_option_color"]
+script = ExtResource("2_parameter")
+id = &"outfit_option_color"
+titulo = "Cor da textura"
+aba = &"Traje"
+shader_parameter = &"ColorOption"
+tipo_controle = 1
+
+[sub_resource type="Resource" id="Parameter_outfit_color"]
+script = ExtResource("2_parameter")
+id = &"outfit_color"
+titulo = "Cor do traje"
+aba = &"Traje"
+shader_parameter = &"ColorTraje"
+tipo_controle = 1
+
+[sub_resource type="Resource" id="Parameter_outfit_light_intensity"]
+script = ExtResource("2_parameter")
+id = &"outfit_light_intensity"
+titulo = "Intensidade da emissão"
+aba = &"Traje"
+shader_parameter = &"TrajeLightIntence"
+valor_minimo = 0.5
+valor_maximo = 3.0
+
+[sub_resource type="Resource" id="Parameter_outfit_light_color"]
+script = ExtResource("2_parameter")
+id = &"outfit_light_color"
+titulo = "Cor da emissão"
+aba = &"Traje"
+shader_parameter = &"TrajeLightColor"
+tipo_controle = 1
+
+[sub_resource type="Resource" id="Parameter_outfit_roughness"]
+script = ExtResource("2_parameter")
+id = &"outfit_roughness"
+titulo = "Roughness do traje"
+aba = &"Traje"
+shader_parameter = &"RoughnessTraje"
+
+[sub_resource type="Resource" id="Parameter_outfit_metallic"]
+script = ExtResource("2_parameter")
+id = &"outfit_metallic"
+titulo = "Metálico do traje"
+aba = &"Traje"
+shader_parameter = &"TrajeMetalic"
+
+[sub_resource type="Resource" id="Resource_hysq0"]
+script = ExtResource("2_parameter")
+id = &"nude_mode"
+titulo = "Nude"
+aba = &"Traje"
+shader_parameter = &"UV2Off"
+tipo_controle = 3
+metadata/_custom_type_script = "uid://iiqr4fasluja"
+
+[resource]
+script = ExtResource("1_item")
+id = &"body_skin"
+titulo = "Corpo padrão"
+cena = ExtResource("3_scene")
+recebe_bake_cor = true
+recebe_bake_roughness = true
+parametros = Array[ExtResource("2_parameter")]([SubResource("Parameter_color_eye_line"), SubResource("Parameter_eye_line"), SubResource("Parameter_skin_color"), SubResource("Parameter_intimate_color"), SubResource("Parameter_pubis_color"), SubResource("Parameter_pubis_texture"), SubResource("Parameter_vein"), SubResource("Parameter_nipples"), SubResource("Parameter_skin_roughness"), SubResource("Parameter_outfit_texture"), SubResource("Parameter_outfit_texture_amount"), SubResource("Parameter_outfit_option_color"), SubResource("Parameter_outfit_color"), SubResource("Parameter_outfit_light_intensity"), SubResource("Parameter_outfit_light_color"), SubResource("Parameter_outfit_roughness"), SubResource("Parameter_outfit_metallic"), SubResource("Resource_hysq0")])

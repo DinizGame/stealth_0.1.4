@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://d20a57v7b206s"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_frame"]
+albedo_color = Color(0.22, 0.2, 0.1, 1)
+metallic = 0.15
+roughness = 0.66
+
+[sub_resource type="BoxMesh" id="Mesh_side"]
+material = SubResource("Mat_frame")
+size = Vector3(0.18, 2.35, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n0wae"]
+size = Vector3(0.18, 2.35, 0.18)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bemvj"]
+size = Vector3(0.18, 2.35, 0.18)
+
+[sub_resource type="BoxMesh" id="Mesh_top"]
+material = SubResource("Mat_frame")
+size = Vector3(4.8, 0.4, 0.18)
+
+[sub_resource type="BoxMesh" id="Mesh_threshold"]
+material = SubResource("Mat_frame")
+size = Vector3(4.8, 0.06, 0.3)
+
+[node name="DoorFrame2Cells" type="Node3D" unique_id=1725666847]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=1283163860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.31, 1.175, 0)
+mesh = SubResource("Mesh_side")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Mesh" unique_id=946871273]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mesh/StaticBody3D" unique_id=1048939538]
+shape = SubResource("BoxShape3D_n0wae")
+
+[node name="Mesh3" type="MeshInstance3D" parent="." unique_id=1326991690]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31, 1.175, 0)
+mesh = SubResource("Mesh_side")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Mesh3" unique_id=1799850439]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mesh3/StaticBody3D" unique_id=1979516997]
+shape = SubResource("BoxShape3D_bemvj")
+
+[node name="Mesh2" type="MeshInstance3D" parent="." unique_id=899693576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5519328, 0)
+mesh = SubResource("Mesh_top")
+
+[node name="Threshold" type="MeshInstance3D" parent="." unique_id=883417776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("Mesh_threshold")

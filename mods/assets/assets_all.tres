@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ExtrasAssetBundle" format=3 uid="uid://8w576uo6sd6c"]
+
+[ext_resource type="Script" uid="uid://d3bhwmj8flpv7" path="res://mods/assets/assets_infor.gd" id="1_registry"]
+
+[resource]
+script = ExtResource("1_registry")
+scene_paths = Dictionary[StringName, String]({
+&"collectible": "res://assets/environment/collectible_scene.tscn",
+&"crate": "res://assets/environment/crate.tscn",
+&"desk": "res://lassets/environment/desk.tscn",
+&"door_1_cell": "res://assets/doors/door_frame_1_cell.tscn",
+&"door_2_cells": "res://assets/doors/door_frame_2_cells.tscn",
+&"enemy": "res://assets/npcs/enimy/enemy.scn",
+&"locker": "res://assets/environment/locker.tscn",
+&"mission_goal": "res://assets/environment/exit_door.tscn",
+&"partition": "res://assets/environment/partition_cover.tscn",
+&"player": "res://assets/player/player.scn",
+&"security_camera": "res://assets/security/default_camera_visual.tscn"
+})
