@@ -2,19 +2,43 @@ extends Node
 
 const SAVE_DIR: String = "user://saves/"
 const INDEX_FILE: String = "user://saves/index.dat"
-const SECRET_KEY: String = "Chave_Secreta_Segura_123!"
 
 # Estrutura do Index em memória
 var valid_saves: Dictionary = {}
 var ignored_files: Array = []
 var perfil_user: String = ""
 
+# Reference to the security manager (will be injected or loaded)
+var _security_manager: SecurityManager
+
+
 func _ready() -> void:
+	_ensure_security_manager()
 	_ensure_save_directory_exists()
 	_load_index()
 	# Sempre que o jogo abre, ele faz uma varredura rápida para achar arquivos que
 	# foram jogados na pasta mas não estão em nenhuma das duas listas.
 	_sync_untracked_files()
+
+
+## Ensure SecurityManager is available
+func _ensure_security_manager() -> void:
+	if _security_manager == null:
+		# Try to get from autoload first
+		if has_node("/root/SecurityManager"):
+			_security_manager = get_node("/root/SecurityManager")
+		else:
+			# Fallback: create a new instance
+			_security_manager = SecurityManager.new()
+			add_child(_security_manager)
+
+
+## Get the encryption key from SecurityManager
+func _get_encryption_key() -> String:
+	if _security_manager == null:
+		_ensure_security_manager()
+	return _security_manager.get_encryption_key()
+
 
 func _ensure_save_directory_exists() -> void:
 	if not DirAccess.dir_exists_absolute(SAVE_DIR):
@@ -28,7 +52,8 @@ func _ensure_save_directory_exists() -> void:
 
 func _load_index() -> void:
 	if FileAccess.file_exists(INDEX_FILE):
-		var file := FileAccess.open_encrypted_with_pass(INDEX_FILE, FileAccess.READ, SECRET_KEY)
+		var encryption_key := _get_encryption_key()
+		var file := FileAccess.open_encrypted_with_pass(INDEX_FILE, FileAccess.READ, encryption_key)
 		if file:
 			var data: Dictionary = file.get_var()
 			# Garante que as chaves existam caso seja uma versão antiga do save
@@ -43,7 +68,8 @@ func _load_index() -> void:
 	ignored_files = []
 
 func _save_index() -> void:
-	var file := FileAccess.open_encrypted_with_pass(INDEX_FILE, FileAccess.WRITE, SECRET_KEY)
+	var encryption_key := _get_encryption_key()
+	var file := FileAccess.open_encrypted_with_pass(INDEX_FILE, FileAccess.WRITE, encryption_key)
 	if file:
 		var data := {
 			"validos": valid_saves,
@@ -126,7 +152,8 @@ func _sync_untracked_files() -> void:
 # Tenta descriptografar e extrair os metadados. Retorna true se for um save legítimo.
 func _verify_and_extract_save(save_id: String) -> bool:
 	var path := SAVE_DIR + save_id + ".dat"
-	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.READ, SECRET_KEY)
+	var encryption_key := _get_encryption_key()
+	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.READ, encryption_key)
 
 	if file:
 		var full_data = file.get_var()
@@ -220,7 +247,8 @@ func create_or_update_save(player_name: String, full_game_data: Dictionary, exis
 	_save_index()
 
 	var path := SAVE_DIR + save_id + ".dat"
-	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.WRITE, SECRET_KEY)
+	var encryption_key := _get_encryption_key()
+	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.WRITE, encryption_key)
 
 	if file:
 		file.store_var(full_game_data)
@@ -235,7 +263,8 @@ func load_game_data(save_id: String) -> Dictionary:
 		return {}
 		
 	var path := SAVE_DIR + save_id + ".dat"
-	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.READ, SECRET_KEY)
+	var encryption_key := _get_encryption_key()
+	var file := FileAccess.open_encrypted_with_pass(path, FileAccess.READ, encryption_key)
 	if file:
 		var data: Dictionary = file.get_var()
 		file.close()
